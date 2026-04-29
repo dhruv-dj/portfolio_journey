@@ -416,6 +416,141 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
   60% {transform:translateX(-50%) scale(1.08)}
   100%{transform:translateX(-50%) scale(1);opacity:1}
 }
+
+/* ── DJ.AI CHAT ── */
+#djai-btn{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;
+  display:flex;align-items:center;gap:.5rem;
+  padding:.65rem 1.2rem;border-radius:999px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.88rem;
+  box-shadow:0 4px 24px rgba(124,58,237,.38);
+  transition:transform .15s,box-shadow .15s;
+}
+#djai-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,.5);}
+#djai-btn svg{width:17px;height:17px;flex-shrink:0;}
+
+#djai-panel{
+  position:fixed;bottom:5.2rem;right:1.5rem;z-index:299;
+  width:370px;
+  background:#fff;border-radius:20px;
+  box-shadow:0 12px 60px rgba(0,0,0,.18),0 2px 8px rgba(0,0,0,.08);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(16px) scale(.97);opacity:0;pointer-events:none;
+  transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .2s;
+  max-height:520px;
+}
+#djai-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all;}
+
+.djai-header{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.9rem 1.1rem;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;flex-shrink:0;
+}
+.djai-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.djai-header-info{flex:1;min-width:0;}
+.djai-header-info h3{
+  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;
+  margin:0;letter-spacing:.3px;
+}
+.djai-header-info p{font-size:.7rem;opacity:.75;margin:.15rem 0 0;white-space:nowrap;}
+.djai-online{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:#4ade80;margin-right:.35rem;flex-shrink:0;
+}
+.djai-close{
+  background:rgba(255,255,255,.15);border:none;color:#fff;
+  width:28px;height:28px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;flex-shrink:0;transition:background .15s;
+}
+.djai-close:hover{background:rgba(255,255,255,.28);}
+
+.djai-messages{
+  flex:1;overflow-y:auto;padding:.9rem 1rem;
+  display:flex;flex-direction:column;gap:.65rem;min-height:180px;
+  scroll-behavior:smooth;
+}
+.djai-messages::-webkit-scrollbar{width:4px;}
+.djai-messages::-webkit-scrollbar-track{background:transparent;}
+.djai-messages::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:4px;}
+
+.djai-msg{
+  max-width:86%;padding:.6rem .85rem;
+  border-radius:16px;font-size:.83rem;line-height:1.55;word-break:break-word;
+}
+.djai-msg.user{
+  background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;
+  align-self:flex-end;border-bottom-right-radius:4px;
+}
+.djai-msg.ai{
+  background:#f8fafc;color:#1e293b;
+  align-self:flex-start;border-bottom-left-radius:4px;
+  border:1px solid #e2e8f0;
+}
+
+.djai-suggestions{
+  padding:.3rem .9rem .8rem;display:flex;flex-direction:column;gap:.35rem;flex-shrink:0;
+}
+.djai-sugg-label{
+  font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;
+  color:#94a3b8;font-weight:600;margin-bottom:.1rem;padding:0 .1rem;
+}
+.djai-suggestion{
+  text-align:left;padding:.45rem .8rem;border-radius:10px;
+  border:1.5px solid #e2e8f0;background:#fff;
+  font-size:.77rem;color:#475569;cursor:pointer;
+  transition:border-color .15s,background .15s,color .15s;
+  font-family:'Inter',sans-serif;
+}
+.djai-suggestion:hover{border-color:#7c3aed;background:#faf5ff;color:#7c3aed;}
+
+.djai-input-row{
+  display:flex;gap:.45rem;padding:.7rem .9rem;
+  border-top:1px solid #f1f5f9;flex-shrink:0;background:#fff;
+}
+.djai-input{
+  flex:1;border:1.5px solid #e2e8f0;border-radius:12px;
+  padding:.5rem .75rem;font-size:.83rem;font-family:'Inter',sans-serif;
+  outline:none;transition:border-color .15s;resize:none;line-height:1.4;
+  height:38px;color:#1e293b;
+}
+.djai-input:focus{border-color:#7c3aed;}
+.djai-input::placeholder{color:#94a3b8;}
+.djai-send{
+  width:38px;height:38px;border-radius:11px;border:none;cursor:pointer;flex-shrink:0;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,opacity .15s;
+}
+.djai-send:hover{transform:scale(1.06);}
+.djai-send:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+
+.typing-dots{display:flex;gap:4px;align-items:center;padding:1px 0;}
+.typing-dots span{
+  width:6px;height:6px;border-radius:50%;background:#94a3b8;
+  animation:tdot .85s infinite;display:block;
+}
+.typing-dots span:nth-child(2){animation-delay:.18s;}
+.typing-dots span:nth-child(3){animation-delay:.36s;}
+@keyframes tdot{
+  0%,60%,100%{transform:translateY(0);opacity:.35;}
+  30%{transform:translateY(-5px);opacity:1;}
+}
+
+@media(max-width:767px){
+  #djai-btn{bottom:1rem;right:1rem;padding:.55rem 1rem;font-size:.82rem;}
+  #djai-panel{
+    width:calc(100vw - 2rem);right:1rem;left:1rem;
+    bottom:4.5rem;max-height:65vh;
+  }
+}
 </style>
 </head>
 <body>
@@ -1360,6 +1495,156 @@ window.addEventListener('scroll',onScroll,{passive:true});
 window.addEventListener('resize',()=>{computeLayout();updateMilestoneStates(currentMilestoneIdx)});
 loop();
 
+})();
+</script>
+
+<!-- ── DJ.AI Chat Widget ── -->
+<button id="djai-btn" onclick="djaiToggle()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  Chat with DJ.AI
+</button>
+
+<div id="djai-panel">
+  <div class="djai-header">
+    <div class="djai-avatar">🤖</div>
+    <div class="djai-header-info">
+      <h3>DJ.AI</h3>
+      <p><span class="djai-online"></span>Digital Dhruv · Ask me anything</p>
+    </div>
+    <button class="djai-close" onclick="djaiToggle()" title="Close">✕</button>
+  </div>
+  <div class="djai-messages" id="djai-messages">
+    <div class="djai-msg ai">Hey! I'm DJ.AI — ask me anything about Dhruv's career, skills, or experiences. 👋</div>
+  </div>
+  <div class="djai-suggestions" id="djai-suggestions">
+    <div class="djai-sugg-label">Suggested questions</div>
+    <button class="djai-suggestion" onclick="djaiSuggest(this)">What did you do at American Express?</button>
+    <button class="djai-suggestion" onclick="djaiSuggest(this)">Tell me about your UCLA experience</button>
+    <button class="djai-suggestion" onclick="djaiSuggest(this)">What are your strongest skills?</button>
+    <button class="djai-suggestion" onclick="djaiSuggest(this)">What is Ziel and why did you start it?</button>
+  </div>
+  <div class="djai-input-row">
+    <input class="djai-input" id="djai-input" placeholder="Ask me anything..." autocomplete="off"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();djaiSend();}"/>
+    <button class="djai-send" id="djai-send" onclick="djaiSend()" title="Send">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const WORKER_URL = 'https://djai.dhruv2703.workers.dev';
+
+  const panel = document.getElementById('djai-panel');
+  const messagesEl = document.getElementById('djai-messages');
+  const inputEl = document.getElementById('djai-input');
+  const sendBtn = document.getElementById('djai-send');
+  const suggestionsEl = document.getElementById('djai-suggestions');
+
+  let history = [];
+  let open = false;
+  let streaming = false;
+
+  window.djaiToggle = function() {
+    open = !open;
+    panel.classList.toggle('open', open);
+    if (open) setTimeout(() => inputEl.focus(), 300);
+  };
+
+  window.djaiSuggest = function(btn) {
+    suggestionsEl.style.display = 'none';
+    djaiSubmit(btn.textContent.trim());
+  };
+
+  window.djaiSend = function() {
+    const text = inputEl.value.trim();
+    if (!text || streaming) return;
+    inputEl.value = '';
+    suggestionsEl.style.display = 'none';
+    djaiSubmit(text);
+  };
+
+  function appendMsg(role, text) {
+    const div = document.createElement('div');
+    div.className = 'djai-msg ' + (role === 'user' ? 'user' : 'ai');
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'djai-msg ai';
+    div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  async function djaiSubmit(text) {
+    streaming = true;
+    sendBtn.disabled = true;
+    appendMsg('user', text);
+    history.push({ role: 'user', content: text });
+
+    const typingDiv = showTyping();
+
+    try {
+      const resp = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      });
+
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+      typingDiv.remove();
+      const aiDiv = appendMsg('ai', '');
+      let fullText = '';
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const payload = line.slice(6).trim();
+          if (payload === '[DONE]') break;
+          try {
+            const json = JSON.parse(payload);
+            const delta = json.delta?.text || '';
+            if (delta) {
+              fullText += delta;
+              aiDiv.textContent = fullText;
+              messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+          } catch {}
+        }
+      }
+
+      if (fullText) history.push({ role: 'assistant', content: fullText });
+
+    } catch (err) {
+      typingDiv.remove();
+      appendMsg('ai', 'Something went wrong connecting. Reach Dhruv directly at dhruv.jain.msba@gmail.com!');
+    }
+
+    streaming = false;
+    sendBtn.disabled = false;
+    inputEl.focus();
+  }
 })();
 </script>
 </body>
