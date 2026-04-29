@@ -331,6 +331,17 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
 .hud-dots{display:flex;gap:.3rem;flex-wrap:wrap;max-width:120px;justify-content:center}
 .hud-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;transition:background .3s}
 
+/* ── SOUND BUTTON ── */
+#sound-btn{
+  position:fixed;top:1rem;right:1rem;z-index:200;
+  background:rgba(255,255,255,.92);border:none;border-radius:12px;
+  padding:.45rem .65rem;font-size:1.15rem;cursor:pointer;
+  box-shadow:0 2px 16px rgba(0,0,0,.13);backdrop-filter:blur(8px);
+  transition:transform .15s,box-shadow .15s;line-height:1;
+}
+#sound-btn:hover{transform:scale(1.1);box-shadow:0 4px 20px rgba(0,0,0,.18)}
+#sound-btn:active{transform:scale(.93)}
+
 /* ── FOOTER ── */
 #footer{
   background:linear-gradient(135deg,#f8fafc 0%,#f0fdf4 100%);
@@ -408,6 +419,8 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
 </style>
 </head>
 <body>
+
+<button id="sound-btn" title="Toggle sound">🔊</button>
 
 <!-- ── HERO ── -->
 <section id="hero">
@@ -957,6 +970,79 @@ const hudCount      = document.getElementById('hud-count');
 const hudDots       = document.getElementById('hud-dots');
 const locLabel      = document.getElementById('loc-label');
 
+/* ── Sound Engine ── */
+let _ac=null,soundOn=true,_stepTick=0,_stepAlt=false;
+function getAc(){
+  if(!_ac) _ac=new(window.AudioContext||window.webkitAudioContext)();
+  if(_ac.state==='suspended') _ac.resume();
+  return _ac;
+}
+function beep(fn){if(!soundOn)return;try{fn(getAc())}catch(e){}}
+
+function playCoin(){
+  beep(c=>{
+    const o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='square';
+    o.frequency.setValueAtTime(988,c.currentTime);
+    o.frequency.setValueAtTime(1319,c.currentTime+0.09);
+    g.gain.setValueAtTime(0.28,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.35);
+    o.start();o.stop(c.currentTime+0.35);
+  });
+}
+function playJump(){
+  beep(c=>{
+    const o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='square';
+    o.frequency.setValueAtTime(220,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(660,c.currentTime+0.12);
+    g.gain.setValueAtTime(0.2,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.18);
+    o.start();o.stop(c.currentTime+0.18);
+  });
+}
+function playStep(){
+  beep(c=>{
+    const freq=_stepAlt?90:110;_stepAlt=!_stepAlt;
+    const buf=c.createBuffer(1,Math.floor(c.sampleRate*0.04),c.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const src=c.createBufferSource(),flt=c.createBiquadFilter(),g=c.createGain();
+    src.buffer=buf;flt.type='bandpass';flt.frequency.value=freq;flt.Q.value=0.5;
+    g.gain.setValueAtTime(0.14,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.05);
+    src.connect(flt);flt.connect(g);g.connect(c.destination);
+    src.start();src.stop(c.currentTime+0.06);
+  });
+}
+function playFanfare(){
+  beep(c=>{
+    [523,659,784,1047].forEach((f,i)=>{
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      const t=c.currentTime+i*0.11;
+      o.type='square';o.frequency.setValueAtTime(f,t);
+      g.gain.setValueAtTime(0.18,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
+      o.start(t);o.stop(t+0.3);
+    });
+  });
+}
+
+// Wake AudioContext on first interaction (browser autoplay policy)
+['touchstart','mousedown'].forEach(e=>{
+  document.addEventListener(e,()=>{if(_ac)_ac.resume();else getAc();},{once:true,passive:true});
+});
+
+// Mute button
+document.getElementById('sound-btn').addEventListener('click',()=>{
+  soundOn=!soundOn;
+  document.getElementById('sound-btn').textContent=soundOn?'🔊':'🔇';
+  if(soundOn) getAc(); // resume context on unmute
+});
+
 /* ── HUD dots ── */
 milestones.forEach((_,i)=>{
   const d=document.createElement('div');
@@ -1110,6 +1196,7 @@ function updateBgEra(newEra){
   const prev=currentBgEra;
   // Flash the screen on location change
   triggerEraFlash();
+  playFanfare();
   // Plane flies across when leaving India for LA
   if(prev==='delhi'&&newEra==='la') triggerPlane();
   // Fade sky
@@ -1211,7 +1298,9 @@ function transitionCard(newIdx){
     void infoCardInner.offsetWidth;
     infoCardInner.classList.add('card-enter');
     cardTransitioning=false;
-    // Jump
+    // Jump + sounds
+    playJump();
+    playCoin();
     character.classList.add('char-jump');
     character.addEventListener('animationend',()=>character.classList.remove('char-jump'),{once:true});
   },220);
@@ -1230,12 +1319,14 @@ function loop(){
   world.style.transform=`translateX(-${currentOffset}px)`;
   parallaxBg.style.transform=`translateX(-${currentOffset*0.25}px)`;
 
-  // Walk/idle state
+  // Walk/idle state + footsteps
   const moving=Math.abs(targetOffset-currentOffset)>1;
   if(moving){
     if(!character.classList.contains('char-walk')){
       character.classList.remove('char-idle');character.classList.add('char-walk');
     }
+    const now=performance.now();
+    if(now-_stepTick>260){playStep();_stepTick=now;}
   } else {
     if(!character.classList.contains('char-idle')){
       character.classList.remove('char-walk');character.classList.add('char-idle');
