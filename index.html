@@ -532,6 +532,15 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
 .djai-send:hover{transform:scale(1.06);}
 .djai-send:disabled{opacity:.35;cursor:not-allowed;transform:none;}
 
+.djai-tell-more{
+  align-self:flex-start;margin-top:-.2rem;
+  background:#fff;border:1.5px solid #7c3aed;color:#7c3aed;
+  border-radius:10px;padding:.35rem .75rem;font-size:.75rem;font-weight:600;
+  font-family:'Inter',sans-serif;cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.djai-tell-more:hover{background:#7c3aed;color:#fff;}
+
 .typing-dots{display:flex;gap:4px;align-items:center;padding:1px 0;}
 .typing-dots span{
   width:6px;height:6px;border-radius:50%;background:#94a3b8;
@@ -1569,13 +1578,29 @@ loop();
     djaiSubmit(text);
   };
 
+  function clearTellMore() {
+    const existing = messagesEl.querySelector('.djai-tell-more');
+    if (existing) existing.remove();
+  }
+
   function appendMsg(role, text) {
+    clearTellMore();
     const div = document.createElement('div');
     div.className = 'djai-msg ' + (role === 'user' ? 'user' : 'ai');
     div.textContent = text;
     messagesEl.appendChild(div);
     messagesEl.scrollTop = messagesEl.scrollHeight;
     return div;
+  }
+
+  function showTellMore() {
+    clearTellMore();
+    const btn = document.createElement('button');
+    btn.className = 'djai-tell-more';
+    btn.textContent = 'Tell me more';
+    btn.onclick = () => { clearTellMore(); djaiSubmit('Tell me more'); };
+    messagesEl.appendChild(btn);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
   function showTyping() {
@@ -1634,7 +1659,10 @@ loop();
         }
       }
 
-      if (fullText) history.push({ role: 'assistant', content: fullText });
+      if (fullText) {
+        history.push({ role: 'assistant', content: fullText });
+        showTellMore();
+      }
 
     } catch (err) {
       typingDiv.remove();
