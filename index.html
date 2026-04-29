@@ -55,19 +55,72 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
   margin-top:2.5rem;display:flex;flex-direction:column;align-items:center;
   gap:.5rem;color:#64748b;font-size:.95rem;font-weight:500;position:relative;
 }
+.hero-cta-mobile{display:none}
 .bounce-arrow{animation:bounceDown 1.4s ease-in-out infinite;font-size:1.5rem}
 @keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
 
-/* ── MOBILE ── */
-#mobile-fallback{display:none;padding:2rem;background:#f8fafc}
-.mob-note{background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem;
-  text-align:center;color:#64748b;border:1px solid #e2e8f0;font-size:.9rem}
-.mob-card{background:#fff;border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:1rem;
-  border-left:4px solid var(--c);box-shadow:0 2px 12px rgba(0,0,0,.07)}
-.mob-card h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.2rem}
-.mob-card p{font-size:.85rem;color:#64748b}
-.mob-badge{display:inline-block;padding:.2rem .7rem;border-radius:999px;background:var(--c);
-  color:#fff;font-size:.72rem;font-weight:600;margin-bottom:.5rem}
+/* ── MOBILE JOURNEY ── */
+#mobile-fallback{display:none}
+@media(max-width:767px){
+  #game-wrapper{display:none}
+  #mobile-fallback{display:block;background:#fef9c3}
+  .hero-cta-desktop{display:none}
+  .hero-cta-mobile{display:inline}
+
+  /* Chapter banners */
+  .mob-chapter{
+    position:relative;min-height:260px;
+    display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
+  }
+  .mob-ch-inner{
+    flex:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:2rem 1rem .8rem;position:relative;z-index:2;
+  }
+  .mob-ch-city{
+    font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:800;
+    color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.35);
+    margin-top:.5rem;letter-spacing:-.5px;text-align:center;
+  }
+  .mob-ch-sub{
+    font-size:.76rem;font-weight:600;color:rgba(255,255,255,.78);
+    letter-spacing:.14em;text-transform:uppercase;margin-top:.35rem;
+  }
+  .mob-ch-ground{height:52px;width:100%;z-index:2;flex-shrink:0}
+
+  /* Cards */
+  .mob-card{
+    background:#fff;border-radius:16px;
+    padding:1.2rem 1.4rem 1.2rem 1.6rem;
+    margin:.75rem 1rem;
+    box-shadow:0 2px 16px rgba(0,0,0,.07);
+    border-left:4px solid var(--c);
+    opacity:0;transform:translateY(18px);
+    transition:opacity .45s ease,transform .45s ease;
+  }
+  .mob-card.visible{opacity:1;transform:none}
+  .mob-card-header{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:.4rem;flex-wrap:wrap;gap:.3rem;
+  }
+  .mob-badge{
+    display:inline-block;padding:.22rem .8rem;border-radius:999px;
+    background:var(--c);color:#fff;font-size:.7rem;font-weight:700;
+    letter-spacing:.06em;text-transform:uppercase;
+  }
+  .mob-card-date{font-size:.72rem;color:#94a3b8;font-weight:500}
+  .mob-card-title{
+    font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;
+    color:#0f172a;line-height:1.3;margin-bottom:.25rem;
+  }
+  .mob-card-org{font-size:.82rem;font-weight:600;color:var(--c);margin-bottom:.5rem}
+  .mob-card-desc{font-size:.82rem;color:#64748b;line-height:1.65;margin-bottom:.7rem}
+  .mob-card-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+  .mob-card-tag{
+    padding:.15rem .55rem;background:#f1f5f9;border-radius:999px;
+    font-size:.7rem;color:#475569;font-weight:500;
+  }
+}
 
 /* ── GAME WRAPPER & STICKY ── */
 #game-wrapper{height:600vh;position:relative}
@@ -334,10 +387,6 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
 .fl-email{background:#0f172a;color:#fff}
 .fl-li{background:#0077b5;color:#fff}
 
-@media(max-width:767px){
-  #game-wrapper{display:none}
-  #mobile-fallback{display:block}
-}
 
 /* ─── PLANE + CONTRAIL ──────────────────────────────── */
 #plane{
@@ -413,15 +462,14 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
   </div>
   <div class="hero-location-note">🇮🇳 Delhi → ✈️ Los Angeles → 🤠 Dallas</div>
   <div class="hero-cta">
-    <span>Scroll to walk the journey</span>
+    <span class="hero-cta-desktop">Scroll to walk the journey</span>
+    <span class="hero-cta-mobile">Scroll to explore the journey</span>
     <span class="bounce-arrow">↓</span>
   </div>
 </section>
 
-<!-- ── MOBILE FALLBACK ── -->
-<div id="mobile-fallback">
-  <div class="mob-note">Best experienced on desktop — here's the condensed journey:</div>
-</div>
+<!-- ── MOBILE JOURNEY (built by JS) ── -->
+<div id="mobile-fallback"></div>
 
 <!-- ── GAME ── -->
 <div id="game-wrapper">
@@ -949,19 +997,77 @@ const hudCount      = document.getElementById('hud-count');
 const hudDots       = document.getElementById('hud-dots');
 const locLabel      = document.getElementById('loc-label');
 
-/* ── Mobile fallback ── */
+/* ── Mobile journey ── */
 if(window.innerWidth < 768){
   const mob = document.getElementById('mobile-fallback');
-  milestones.forEach(m=>{
-    const c=document.createElement('div');
-    c.className='mob-card';
-    c.style.setProperty('--c',CAT_COLORS[m.cat]);
-    c.innerHTML=`<span class="mob-badge">${CAT_LABELS[m.cat]}</span>
-      <h3>${m.title}</h3>
-      <p style="font-weight:600;color:#0f172a;margin-bottom:.3rem">${m.org}</p>
-      <p>${m.date}</p><p style="margin-top:.4rem">${m.desc}</p>`;
-    mob.appendChild(c);
+
+  const chapters = [
+    {label:'🇮🇳  Delhi, India',  sub:'2016 – 2023',
+     sky:'linear-gradient(to bottom,#92400e,#ea580c 40%,#fbbf24 78%,#fef3c7)',
+     gnd:'linear-gradient(to bottom,#ca8a04,#78350f)',gndTop:'#fbbf24',
+     charId:'cv-young-idle', range:[0,7]},
+    {label:'✈️  Los Angeles, CA', sub:'2023 – 2024',
+     sky:'linear-gradient(to bottom,#1e3a8a,#3b82f6 52%,#eff6ff)',
+     gnd:'linear-gradient(to bottom,#4ade80,#166534)',gndTop:'#86efac',
+     charId:'cv-usa-idle', range:[7,11]},
+    {label:'🤠  Dallas, Texas',   sub:'2025 – Now',
+     sky:'linear-gradient(to bottom,#0c4a6e,#0ea5e9 52%,#fefce8)',
+     gnd:'linear-gradient(to bottom,#84cc16,#365314)',gndTop:'#bef264',
+     charId:'cv-usa-idle', range:[11,12]},
+  ];
+
+  let cardDelay = 0;
+  chapters.forEach(ch=>{
+    // Clone character SVG from the (hidden) desktop DOM
+    const charEl = document.getElementById(ch.charId);
+    let charHTML = '';
+    if(charEl){
+      const svg = charEl.querySelector('svg').cloneNode(true);
+      svg.setAttribute('width','48'); svg.setAttribute('height','82');
+      charHTML = svg.outerHTML;
+    }
+
+    // Chapter banner
+    const banner = document.createElement('div');
+    banner.className = 'mob-chapter';
+    banner.style.background = ch.sky;
+    banner.innerHTML = `
+      <div class="mob-ch-inner">
+        ${charHTML}
+        <div class="mob-ch-city">${ch.label}</div>
+        <div class="mob-ch-sub">${ch.sub}</div>
+      </div>
+      <div class="mob-ch-ground" style="background:${ch.gnd};border-top:3px solid ${ch.gndTop}"></div>`;
+    mob.appendChild(banner);
+
+    // Milestone cards
+    milestones.slice(ch.range[0], ch.range[1]).forEach(m=>{
+      const card = document.createElement('div');
+      card.className = 'mob-card';
+      card.style.setProperty('--c', CAT_COLORS[m.cat]);
+      card.style.transitionDelay = (cardDelay * 60) + 'ms';
+      card.innerHTML = `
+        <div class="mob-card-header">
+          <span class="mob-badge">${CAT_LABELS[m.cat]}</span>
+          <span class="mob-card-date">${m.date}</span>
+        </div>
+        <div class="mob-card-title">${m.title}${m.current?'<span class="now-badge"><span class="now-dot"></span>NOW</span>':''}</div>
+        <div class="mob-card-org">${m.org}</div>
+        <div class="mob-card-desc">${m.desc}</div>
+        <div class="mob-card-tags">${m.tags.map(t=>`<span class="mob-card-tag">${t}</span>`).join('')}</div>`;
+      mob.appendChild(card);
+      cardDelay++;
+    });
   });
+
+  // Scroll-triggered fade-in
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+    });
+  },{threshold:0.12});
+  mob.querySelectorAll('.mob-card').forEach(c=>io.observe(c));
+
   return;
 }
 
