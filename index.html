@@ -61,12 +61,12 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
 /* ── MOBILE ── */
 #mobile-fallback{display:none}
 @media(max-width:767px){
-  /* Info card: full-width centered, ignore JS-set left */
+  /* Info card: full-width, sits above the character */
   #info-card{
     width:calc(100vw - 2rem)!important;
     left:1rem!important;
     transform:none!important;
-    bottom:108px!important;
+    bottom:185px!important;
   }
   /* Intro prompt: centered, allow wrapping */
   #intro-prompt{
@@ -75,7 +75,7 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
     white-space:normal!important;
     text-align:center;
     width:calc(100vw - 4rem);
-    bottom:230px!important;
+    bottom:300px!important;
   }
   /* HUD: tighter on small screens */
   #progress-hud{bottom:8px!important;right:8px!important;padding:.4rem .7rem!important}
