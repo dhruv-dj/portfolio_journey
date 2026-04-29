@@ -3,1524 +3,1281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dhruv Jain — The Journey</title>
+<title>Dhruv Jain — The Walk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#05050e;
-  --surface:rgba(255,255,255,0.04);
-  --border:rgba(255,255,255,0.08);
-  --text:#e2e8f0;
-  --muted:#64748b;
+  --edu:#8b5cf6;--work:#0ea5e9;--startup:#f59e0b;--research:#10b981;--achieve:#f43f5e;
+  --gh:80px; /* ground height */
 }
+html{scroll-behavior:auto}
+body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#fef9c3}
 
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter',system-ui,sans-serif;
-  overflow-x:hidden;
-  min-height:100vh;
-  cursor:none;
-}
-
-/* ─── CURSOR ─────────────────────────────────────────── */
-#cursor{
-  position:fixed;
-  width:12px;height:12px;
-  border-radius:50%;
-  background:#fff;
-  pointer-events:none;
-  z-index:9999;
-  transform:translate(-50%,-50%);
-  transition:transform .1s,background .2s,width .2s,height .2s;
-  mix-blend-mode:difference;
-}
-#cursor-trail{
-  position:fixed;
-  width:400px;height:400px;
-  border-radius:50%;
-  pointer-events:none;
-  z-index:0;
-  transform:translate(-50%,-50%);
-  background:radial-gradient(circle,rgba(168,85,247,.07) 0%,transparent 70%);
-  transition:left .08s ease,top .08s ease;
-}
-
-/* ─── CANVAS ─────────────────────────────────────────── */
-#canvas{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-}
-
-/* ─── SCROLL PROGRESS ────────────────────────────────── */
-#prog{
-  position:fixed;
-  top:0;left:0;
-  height:3px;
-  width:0%;
-  background:linear-gradient(90deg,#a855f7,#38bdf8,#10b981);
-  z-index:1000;
-  box-shadow:0 0 12px #a855f7aa;
-  transition:width .05s linear;
-}
-
-/* ─── YEAR TRACKER ───────────────────────────────────── */
-#year-tracker{
-  position:fixed;
-  right:1.5rem;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:200;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:.5rem;
-  opacity:0;
-  transition:opacity .4s;
-}
-#year-tracker.show{opacity:1}
-.yt-year{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.72rem;
-  font-weight:700;
-  letter-spacing:.2em;
-  color:rgba(168,85,247,.8);
-  writing-mode:vertical-rl;
-  text-orientation:mixed;
-}
-.yt-line{
-  width:1px;
-  height:40px;
-  background:linear-gradient(to bottom,rgba(168,85,247,.5),transparent);
-}
-@media(max-width:900px){#year-tracker{display:none}}
-
-/* ─── BACK TO TOP ────────────────────────────────────── */
-#back-top{
-  position:fixed;
-  bottom:2rem;
-  right:2rem;
-  z-index:300;
-  width:44px;height:44px;
-  border-radius:50%;
-  background:rgba(168,85,247,.15);
-  border:1px solid rgba(168,85,247,.35);
-  backdrop-filter:blur(12px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  opacity:0;
-  transform:translateY(20px);
-  transition:opacity .3s,transform .3s,background .2s;
-  color:#c084fc;
-  font-size:1.1rem;
-}
-#back-top.show{opacity:1;transform:translateY(0)}
-#back-top:hover{background:rgba(168,85,247,.3)}
-
-/* ─── NAV ────────────────────────────────────────────── */
-nav{
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:999;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:.9rem 2rem;
-  background:rgba(5,5,14,.75);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-}
-.nav-logo{
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:700;
-  font-size:1.1rem;
-  background:linear-gradient(135deg,#fff 30%,#a855f7);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.nav-links{
-  display:flex;
-  gap:1.5rem;
-  list-style:none;
-}
-.nav-links a{
-  font-size:.82rem;
-  color:var(--muted);
-  text-decoration:none;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  font-weight:500;
-  transition:color .2s;
-}
-.nav-links a:hover{color:var(--text)}
-@media(max-width:600px){.nav-links{display:none}}
-
-/* ─── HERO ───────────────────────────────────────────── */
+/* ── HERO ── */
 #hero{
-  position:relative;
-  z-index:1;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:2rem;
-  padding-top:5rem;
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#fef3c7 0%,#e0f2fe 50%,#f0fdf4 100%);
+  text-align:center;padding:2rem;position:relative;overflow:hidden;
+}
+#hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 70% 20%,rgba(251,191,36,.2) 0%,transparent 60%),
+             radial-gradient(ellipse at 20% 80%,rgba(167,243,208,.25) 0%,transparent 55%);
 }
 .hero-eyebrow{
-  font-size:.82rem;
-  letter-spacing:.35em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:1.5rem;
-  opacity:0;
-  animation:fadeUp .9s .4s forwards;
+  font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;color:#94a3b8;
+  margin-bottom:1rem;position:relative;
 }
-.hero-name{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(3.5rem,11vw,9rem);
-  font-weight:800;
-  line-height:.95;
-  background:linear-gradient(135deg,#ffffff 20%,#c084fc 50%,#38bdf8 80%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  margin-bottom:1.25rem;
-  opacity:0;
-  animation:fadeUp .9s .6s forwards;
+.hero-title{
+  font-family:'Space Grotesk',sans-serif;font-size:clamp(3rem,9vw,7rem);
+  font-weight:800;color:#0f172a;line-height:.95;letter-spacing:-2px;position:relative;
 }
-.hero-tagline{
-  font-size:clamp(.95rem,2.5vw,1.3rem);
-  color:var(--muted);
-  max-width:580px;
-  line-height:1.75;
-  margin:0 auto 3rem;
-  opacity:0;
-  animation:fadeUp .9s .8s forwards;
+.hero-sub{
+  margin-top:.9rem;font-size:clamp(.95rem,2.2vw,1.3rem);color:#475569;
+  font-weight:500;position:relative;max-width:560px;
 }
-.hero-pills{
-  display:flex;
-  gap:.75rem;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-bottom:3.5rem;
-  opacity:0;
-  animation:fadeUp .9s 1s forwards;
+.hero-legend{
+  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;
+  margin-top:2.5rem;position:relative;
 }
-.pill{
-  padding:.35rem 1rem;
-  border-radius:100px;
-  font-size:.78rem;
-  font-weight:500;
-  letter-spacing:.06em;
-  border:1px solid rgba(168,85,247,.3);
-  background:rgba(168,85,247,.1);
-  color:#c084fc;
-  transition:all .25s;
+.legend-pill{
+  padding:.3rem .9rem;border-radius:999px;font-size:.78rem;
+  font-weight:600;color:#fff;letter-spacing:.3px;
 }
-.pill:hover{background:rgba(168,85,247,.2);transform:translateY(-2px)}
-.pill.blue{border-color:rgba(56,189,248,.3);background:rgba(56,189,248,.1);color:#7dd3fc}
-.pill.blue:hover{background:rgba(56,189,248,.2)}
-.pill.green{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1);color:#6ee7b7}
-.pill.green:hover{background:rgba(16,185,129,.2)}
-.pill.amber{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1);color:#fcd34d}
-.pill.amber:hover{background:rgba(245,158,11,.2)}
-.hero-stats{
-  display:flex;
-  gap:3rem;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-bottom:3.5rem;
-  opacity:0;
-  animation:fadeUp .9s 1.1s forwards;
+.hero-location-note{
+  margin-top:2rem;padding:.6rem 1.4rem;border-radius:999px;
+  background:rgba(255,255,255,.6);border:1px solid rgba(0,0,0,.08);
+  font-size:.82rem;color:#64748b;backdrop-filter:blur(6px);position:relative;
 }
-.hs{text-align:center}
-.hs-num{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:2.2rem;
-  font-weight:700;
-  color:#fff;
-  line-height:1;
+.hero-cta{
+  margin-top:2.5rem;display:flex;flex-direction:column;align-items:center;
+  gap:.5rem;color:#64748b;font-size:.95rem;font-weight:500;position:relative;
 }
-.hs-lbl{
-  font-size:.72rem;
-  color:var(--muted);
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  margin-top:.25rem;
-}
-.scroll-cta{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:.6rem;
-  opacity:0;
-  animation:fadeUp .9s 1.3s forwards;
-  cursor:pointer;
-}
-.scroll-cta span{
-  font-size:.72rem;
-  letter-spacing:.25em;
-  text-transform:uppercase;
-  color:var(--muted);
-}
-.scroll-arr{
-  width:20px;height:20px;
-  border-right:2px solid #a855f7;
-  border-bottom:2px solid #a855f7;
-  transform:rotate(45deg);
-  animation:bounce 2s infinite;
-}
+.bounce-arrow{animation:bounceDown 1.4s ease-in-out infinite;font-size:1.5rem}
+@keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
 
-/* ─── ERA BANNERS ────────────────────────────────────── */
-.era-banner{
-  position:relative;
-  z-index:4;
-  margin:3rem 0 2rem;
-  display:flex;
-  align-items:center;
-  gap:1.5rem;
-  opacity:0;
-  transform:translateY(20px);
-  transition:opacity .6s,transform .6s cubic-bezier(.16,1,.3,1);
-}
-.era-banner.vis{opacity:1;transform:translateY(0)}
-.era-line{
-  flex:1;
-  height:1px;
-  background:linear-gradient(to right,transparent,rgba(255,255,255,.1));
-}
-.era-line.flip{background:linear-gradient(to left,transparent,rgba(255,255,255,.1))}
-.era-inner{
-  display:flex;
-  align-items:center;
-  gap:.75rem;
-  white-space:nowrap;
-}
-.era-chapter{
-  font-size:.6rem;
-  font-weight:600;
-  letter-spacing:.25em;
-  text-transform:uppercase;
-  color:var(--muted);
-}
-.era-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.95rem;
-  font-weight:700;
-  color:rgba(255,255,255,.35);
-  letter-spacing:.08em;
-}
-.era-sep{color:rgba(255,255,255,.15);font-size:.8rem}
+/* ── MOBILE ── */
+#mobile-fallback{display:none;padding:2rem;background:#f8fafc}
+.mob-note{background:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem;
+  text-align:center;color:#64748b;border:1px solid #e2e8f0;font-size:.9rem}
+.mob-card{background:#fff;border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:1rem;
+  border-left:4px solid var(--c);box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.mob-card h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.2rem}
+.mob-card p{font-size:.85rem;color:#64748b}
+.mob-badge{display:inline-block;padding:.2rem .7rem;border-radius:999px;background:var(--c);
+  color:#fff;font-size:.72rem;font-weight:600;margin-bottom:.5rem}
 
-/* ─── TIMELINE ───────────────────────────────────────── */
-#timeline{
-  position:relative;
-  z-index:1;
-  padding:4rem 1rem 8rem;
-  max-width:1100px;
-  margin:0 auto;
-}
-.tl-track{
-  position:absolute;
-  left:50%;
-  top:0;bottom:0;
-  width:2px;
-  transform:translateX(-50%);
-  background:rgba(255,255,255,0.05);
-}
-.tl-fill{
-  position:absolute;
-  left:50%;
-  top:0;
-  width:2px;
-  height:0;
-  transform:translateX(-50%);
-  background:linear-gradient(180deg,
-    #a855f7 0%,#6366f1 20%,
-    #38bdf8 40%,#10b981 60%,
-    #f59e0b 80%,#fb7185 100%);
-  box-shadow:0 0 15px rgba(168,85,247,.45);
-}
-.tl-traveler{
-  position:absolute;
-  left:50%;
-  top:0;
-  width:18px;height:18px;
-  border-radius:50%;
-  background:#fff;
-  transform:translate(-50%,-50%);
-  box-shadow:0 0 0 4px rgba(255,255,255,.15),0 0 28px #fff,0 0 56px rgba(168,85,247,.7);
-  z-index:5;
-}
+/* ── GAME WRAPPER & STICKY ── */
+#game-wrapper{height:600vh;position:relative}
+#game-sticky{position:sticky;top:0;height:100vh;overflow:hidden}
 
-/* year marker */
-.yr-mark{
-  text-align:center;
-  margin:1.5rem 0 2.5rem;
-  position:relative;
-  z-index:4;
-  opacity:0;
-  transform:scale(.8);
-  transition:opacity .5s,transform .5s cubic-bezier(.34,1.56,.64,1);
+/* ── SKY LAYERS ── */
+.sky-layer{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  transition:opacity 2s ease;
 }
-.yr-mark.vis{opacity:1;transform:scale(1)}
-.yr-inner{
-  display:inline-flex;
-  align-items:center;
-  gap:.75rem;
-  padding:.4rem 1.4rem;
-  border-radius:100px;
-  backdrop-filter:blur(12px);
-  background:rgba(168,85,247,.12);
-  border:1px solid rgba(168,85,247,.3);
-}
-.yr-txt{
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:700;
-  font-size:.95rem;
-  color:#c084fc;
-  letter-spacing:.2em;
-}
-
-/* milestone row */
-.ms{
-  display:grid;
-  grid-template-columns:1fr 60px 1fr;
-  margin-bottom:3rem;
-  align-items:start;
-  position:relative;
-}
-
-/* dot column */
-.ms-dot{
-  display:flex;
-  justify-content:center;
-  padding-top:1.6rem;
-  position:relative;
-  z-index:4;
-}
-/* connector line */
-.ms-dot::after{
-  content:'';
-  position:absolute;
-  top:calc(1.6rem + 8px);
-  height:1px;
-  width:0;
-  background:var(--ac);
-  opacity:0;
-  transition:width .5s .35s ease,opacity .5s .35s;
-}
-.ms.left .ms-dot::after{right:50%}
-.ms.right .ms-dot::after{left:50%}
-.ms-dot.vis::after{width:1.6rem;opacity:.35}
-
-.dot-ring{
-  width:18px;height:18px;
-  border-radius:50%;
-  border:2.5px solid var(--ac);
-  background:var(--bg);
-  box-shadow:0 0 12px var(--ac),0 0 24px rgba(0,0,0,.4);
-  opacity:0;
-  transform:scale(0);
-  transition:opacity .4s,transform .4s cubic-bezier(.34,1.56,.64,1);
-  flex-shrink:0;
-}
-.dot-ring.vis{opacity:1;transform:scale(1)}
-
-/* card */
-.ms-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:1.5rem 1.6rem;
-  backdrop-filter:blur(16px);
-  position:relative;
-  overflow:hidden;
-  transition:transform .35s,box-shadow .35s;
-  opacity:0;
-  will-change:opacity,transform;
-}
-.ms-card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  border-radius:18px;
-  padding:1px;
-  background:linear-gradient(135deg,var(--ac),transparent 55%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  opacity:.65;
-  pointer-events:none;
-}
-.ms-card::after{
-  content:'';
-  position:absolute;
-  top:-60%;left:-60%;
-  width:220%;height:220%;
-  background:radial-gradient(circle at 25% 25%,rgba(var(--ac-rgb),.06),transparent 55%);
-  pointer-events:none;
-}
-.ms-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 24px 50px rgba(0,0,0,.5),0 0 35px rgba(var(--ac-rgb),.18);
-}
-.ms.from-left .ms-card{transform:translateX(-70px)}
-.ms.from-right .ms-card{transform:translateX(70px)}
-.ms-card.vis{
+#sky-delhi{
+  background:linear-gradient(to bottom,#92400e 0%,#b45309 15%,#ea580c 35%,#f97316 55%,#fbbf24 75%,#fef3c7 100%);
   opacity:1;
-  transform:translateX(0) !important;
-  transition:opacity .75s ease,transform .75s cubic-bezier(.16,1,.3,1);
+}
+#sky-la{
+  background:linear-gradient(to bottom,#1e3a8a 0%,#1d4ed8 20%,#3b82f6 50%,#93c5fd 78%,#eff6ff 100%);
+  opacity:0;
+}
+#sky-dallas{
+  background:linear-gradient(to bottom,#0c4a6e 0%,#0369a1 25%,#0ea5e9 52%,#7dd3fc 78%,#fefce8 100%);
+  opacity:0;
 }
 
-/* grid placement */
-.ms.left .ms-card{grid-column:1;grid-row:1;margin-right:1.5rem}
-.ms.left .ms-dot{grid-column:2;grid-row:1}
-.ms.left .ms-empty{grid-column:3;grid-row:1}
-.ms.right .ms-card{grid-column:3;grid-row:1;margin-left:1.5rem}
-.ms.right .ms-dot{grid-column:2;grid-row:1}
-.ms.right .ms-empty{grid-column:1;grid-row:1}
+/* ── SUN ── */
+#sun{position:absolute;top:44px;right:72px;z-index:6;pointer-events:none;transition:opacity 1.5s}
+.sun-circle{
+  width:60px;height:60px;border-radius:50%;
+  background:radial-gradient(circle,#fde68a 55%,#fbbf24 100%);
+  box-shadow:0 0 28px 10px rgba(251,191,36,.35);
+  position:relative;left:8px;top:8px;
+}
+.sun-rays{position:absolute;inset:0;animation:sunSpin 20s linear infinite}
+.sun-rays::before{
+  content:'';position:absolute;top:50%;left:50%;
+  width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;
+  box-shadow:0 -44px 0 4px rgba(251,191,36,.22),0 44px 0 4px rgba(251,191,36,.22),
+             -44px 0 0 4px rgba(251,191,36,.22),44px 0 0 4px rgba(251,191,36,.22),
+             -31px -31px 0 4px rgba(251,191,36,.18),31px -31px 0 4px rgba(251,191,36,.18),
+             -31px 31px 0 4px rgba(251,191,36,.18),31px 31px 0 4px rgba(251,191,36,.18);
+}
+@keyframes sunSpin{to{transform:rotate(360deg)}}
 
-/* category accents */
-.ms.edu{--ac:#a855f7;--ac-rgb:168,85,247}
-.ms.work{--ac:#38bdf8;--ac-rgb:56,189,248}
-.ms.startup{--ac:#f59e0b;--ac-rgb:245,158,11}
-.ms.research{--ac:#10b981;--ac-rgb:16,185,129}
-.ms.achieve{--ac:#fb7185;--ac-rgb:251,113,133}
+/* ── LOCATION LABEL ── */
+#loc-label{
+  position:absolute;top:18%;left:50%;transform:translateX(-50%);
+  z-index:50;pointer-events:none;
+  background:rgba(255,255,255,.93);backdrop-filter:blur(14px);
+  border-radius:999px;padding:.6rem 1.8rem;
+  font-size:1.05rem;font-weight:700;color:#0f172a;
+  border:1px solid rgba(0,0,0,.1);
+  white-space:nowrap;letter-spacing:.02em;
+  opacity:0;transition:opacity .5s;
+  box-shadow:0 6px 28px rgba(0,0,0,.14);
+}
+#loc-label.show{opacity:1}
 
-/* card internals */
-.c-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:.4rem;
-  padding:.22rem .7rem;
-  border-radius:100px;
-  font-size:.68rem;
-  font-weight:600;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  margin-bottom:.65rem;
-  background:rgba(var(--ac-rgb),.14);
-  color:var(--ac);
-  border:1px solid rgba(var(--ac-rgb),.28);
-}
-.c-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--ac)}
-.c-date{font-size:.75rem;color:var(--muted);font-weight:500;margin-bottom:.4rem;letter-spacing:.04em}
-.c-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:1.2rem;font-weight:700;color:#fff;
-  line-height:1.3;margin-bottom:.2rem;
-}
-.c-org{font-size:.88rem;color:var(--ac);font-weight:500;margin-bottom:.7rem}
-.c-desc{font-size:.85rem;color:#8898aa;line-height:1.75;margin-bottom:.9rem}
-.c-nums{
-  display:flex;flex-wrap:wrap;gap:1.2rem;
-  margin-bottom:.9rem;padding:.7rem 1rem;
-  background:rgba(255,255,255,.03);
-  border-radius:10px;border:1px solid rgba(255,255,255,.06);
-}
-.c-num-val{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:1.4rem;font-weight:700;color:#fff;line-height:1;
-}
-.c-num-lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.15rem}
+/* ── PARALLAX BG ── */
+#parallax-bg{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 
-/* tags with stagger */
-.tags{display:flex;flex-wrap:wrap;gap:.35rem}
-.tag{
-  padding:.18rem .55rem;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:100px;
-  font-size:.7rem;color:#64748b;
-  opacity:0;transform:translateY(6px);
-  transition:opacity .3s,transform .3s,background .2s,color .2s,border-color .2s;
-}
-.tag.t-vis{opacity:1;transform:translateY(0)}
-.tag:hover{
-  background:rgba(var(--ac-rgb),.12);
-  color:var(--ac);
-  border-color:rgba(var(--ac-rgb),.3);
-}
+/* Clouds */
+.cloud{position:absolute;background:rgba(255,255,255,.82);border-radius:999px;filter:blur(1px)}
+.cloud::before,.cloud::after{content:'';position:absolute;background:inherit;border-radius:50%}
+.cloud-1{width:100px;height:28px;top:12%;left:15%}
+.cloud-1::before{width:50px;height:44px;top:-22px;left:10px}
+.cloud-1::after{width:36px;height:32px;top:-15px;right:14px}
+.cloud-2{width:130px;height:32px;top:20%;left:50%;opacity:.75}
+.cloud-2::before{width:60px;height:50px;top:-26px;left:14px}
+.cloud-2::after{width:44px;height:36px;top:-18px;right:18px}
+.cloud-3{width:80px;height:22px;top:8%;right:22%;opacity:.6}
+.cloud-3::before{width:38px;height:36px;top:-18px;left:8px}
+.cloud-3::after{width:28px;height:26px;top:-12px;right:10px}
 
-/* current role */
-.current-pill{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.25rem .75rem;border-radius:100px;
-  font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
-  background:rgba(16,185,129,.15);color:#34d399;
-  border:1px solid rgba(16,185,129,.3);margin-bottom:.65rem;
-}
-.cur-dot{
-  width:6px;height:6px;border-radius:50%;background:#34d399;
-  animation:pulseDot 1.8s infinite;
-}
-.ms-card.current-glow{
-  box-shadow:0 0 0 1px rgba(16,185,129,.2),0 0 40px rgba(16,185,129,.1),0 0 80px rgba(16,185,129,.04);
-  animation:cardGlow 3s ease-in-out infinite;
-}
+/* Hills */
+.hill{position:absolute;bottom:calc(var(--gh) - 8px);border-radius:50% 50% 0 0;
+  transition:background 2s ease}
+.hill-1{width:320px;height:140px;left:5%;background:#fbbf24;opacity:.35}
+.hill-2{width:480px;height:175px;left:32%;background:#f97316;opacity:.25}
+.hill-3{width:300px;height:120px;right:8%;background:#ea580c;opacity:.3}
 
-/* shimmer */
-.ms-card .shimmer{
-  position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.04) 50%,transparent 60%);
-  animation:shimmer 3.5s infinite;
+/* City silhouettes */
+.city-sil{
+  position:absolute;bottom:calc(var(--gh) - 2px);left:0;
+  width:100%;height:200px;
+  opacity:0;transition:opacity 2s ease;
   pointer-events:none;
 }
+#sil-delhi{opacity:1}
 
-/* ─── SKILLS SECTION ─────────────────────────────────── */
-#skills{
-  position:relative;z-index:1;
-  max-width:1100px;margin:0 auto;
-  padding:6rem 1.5rem 8rem;
-  border-top:1px solid rgba(255,255,255,.06);
+/* ── GROUND ── */
+#ground-wrap{
+  position:absolute;bottom:0;left:0;right:0;
+  height:var(--gh);z-index:8;
 }
-.skills-header{
-  text-align:center;margin-bottom:4rem;
-  opacity:0;transform:translateY(24px);
-  transition:opacity .6s,transform .6s;
+.ground-layer{
+  position:absolute;inset:0;
+  transition:opacity 2s ease;
 }
-.skills-header.vis{opacity:1;transform:translateY(0)}
-.skills-eyebrow{
-  font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:.75rem;
+#gnd-delhi{
+  background:linear-gradient(to bottom,#ca8a04 0%,#92400e 55%,#78350f 100%);
+  border-top:3px solid #fbbf24;opacity:1;
 }
-.skills-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(2rem,4vw,3rem);font-weight:800;
-  background:linear-gradient(135deg,#fff 30%,#a855f7 70%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+#gnd-la{
+  background:linear-gradient(to bottom,#4ade80 0%,#22c55e 50%,#166534 100%);
+  border-top:3px solid #86efac;opacity:0;
 }
-.skills-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:1.5rem;
+#gnd-dallas{
+  background:linear-gradient(to bottom,#84cc16 0%,#4d7c0f 55%,#365314 100%);
+  border-top:3px solid #bef264;opacity:0;
 }
-.skill-cat{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:1.5rem;
-  opacity:0;transform:translateY(30px);
-  transition:opacity .6s,transform .6s;
-}
-.skill-cat.vis{opacity:1;transform:translateY(0)}
-.skill-cat:hover{border-color:rgba(168,85,247,.2)}
-.sk-cat-head{
-  display:flex;align-items:center;gap:.6rem;
-  margin-bottom:1.1rem;
-}
-.sk-cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sk-cat-name{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.88rem;font-weight:700;color:#fff;letter-spacing:.04em;
-}
-.sk-chips{display:flex;flex-wrap:wrap;gap:.4rem}
-.sk-chip{
-  padding:.22rem .65rem;
-  border-radius:100px;font-size:.72rem;font-weight:500;
-  opacity:0;transform:scale(.9);
-  transition:opacity .3s,transform .3s,background .2s;
-}
-.sk-chip.c-vis{opacity:1;transform:scale(1)}
 
-/* skill category colors */
-.sk-cat.analytics .sk-cat-dot{background:#a855f7}
-.sk-cat.analytics .sk-chip{background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.2)}
-.sk-cat.analytics .sk-chip:hover{background:rgba(168,85,247,.22)}
-.sk-cat.engineering .sk-cat-dot{background:#38bdf8}
-.sk-cat.engineering .sk-chip{background:rgba(56,189,248,.12);color:#7dd3fc;border:1px solid rgba(56,189,248,.2)}
-.sk-cat.engineering .sk-chip:hover{background:rgba(56,189,248,.22)}
-.sk-cat.strategy .sk-cat-dot{background:#f59e0b}
-.sk-cat.strategy .sk-chip{background:rgba(245,158,11,.12);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
-.sk-cat.strategy .sk-chip:hover{background:rgba(245,158,11,.22)}
-.sk-cat.tools .sk-cat-dot{background:#10b981}
-.sk-cat.tools .sk-chip{background:rgba(16,185,129,.12);color:#6ee7b7;border:1px solid rgba(16,185,129,.2)}
-.sk-cat.tools .sk-chip:hover{background:rgba(16,185,129,.22)}
+/* ── WORLD ── */
+#world{
+  position:absolute;top:0;bottom:0;left:0;
+  z-index:7;will-change:transform;
+}
+/* Trees */
+.tree{position:absolute;bottom:calc(var(--gh));display:flex;flex-direction:column;align-items:center}
+.tree-top{width:28px;height:42px;border-radius:50% 50% 45% 45%;background:#16a34a;margin-bottom:-2px}
+.tree-trunk{width:7px;height:14px;background:#92400e;border-radius:0 0 2px 2px}
+.palm-top{
+  width:10px;height:55px;background:#78350f;border-radius:3px;
+  position:relative;margin-bottom:-2px;
+}
+.palm-top::before,.palm-top::after{
+  content:'';position:absolute;top:2px;
+  width:38px;height:12px;background:#15803d;
+  border-radius:50%;transform-origin:left center;
+}
+.palm-top::before{transform:rotate(-40deg);left:4px}
+.palm-top::after{transform:rotate(40deg);right:4px}
+.bush{position:absolute;bottom:calc(var(--gh));
+  width:28px;height:18px;border-radius:50% 50% 45% 45%;background:#15803d;opacity:.7}
+/* Delhi-style buildings in world */
+.d-building{
+  position:absolute;bottom:calc(var(--gh));
+  background:rgba(120,53,15,.4);border-radius:2px 2px 0 0;
+}
 
-/* ─── FOOTER ─────────────────────────────────────────── */
+/* ── CHARACTER ── */
+#character{
+  position:absolute;
+  bottom:calc(var(--gh) - 15px);
+  z-index:20;
+  width:55px;height:95px;
+}
+.char-v{position:absolute;top:0;left:0;opacity:0;transition:opacity .35s;pointer-events:none}
+/* Show correct variant */
+#character.era-young.char-walk #cv-young-walk,
+#character.era-young.char-idle #cv-young-idle,
+#character.era-amex.char-walk  #cv-amex-walk,
+#character.era-amex.char-idle  #cv-amex-idle,
+#character.era-usa.char-walk   #cv-usa-walk,
+#character.era-usa.char-idle   #cv-usa-idle{opacity:1}
+
+/* Walking anims — target SVG groups by class */
+.char-walk .arm-l,.char-walk .arm-r,
+.char-walk .leg-l,.char-walk .leg-r{transform-box:fill-box}
+.char-walk .arm-l{animation:armSwL .4s ease-in-out infinite;transform-origin:top center}
+.char-walk .arm-r{animation:armSwR .4s ease-in-out infinite;transform-origin:top center}
+.char-walk .leg-l{animation:legSwL .4s ease-in-out infinite;transform-origin:top center}
+.char-walk .leg-r{animation:legSwR .4s ease-in-out infinite;transform-origin:top center}
+.char-walk .walk-body{animation:bodyBob .4s ease-in-out infinite}
+/* Idle breathe */
+.char-idle .idle-body{animation:idleBreathe 2.5s ease-in-out infinite}
+/* Jump */
+.char-jump{animation:charJump .5s cubic-bezier(.36,.07,.19,.97) forwards!important}
+
+@keyframes armSwL{0%,100%{transform:rotate(-32deg)}50%{transform:rotate(32deg)}}
+@keyframes armSwR{0%,100%{transform:rotate(32deg)}50%{transform:rotate(-32deg)}}
+@keyframes legSwL{0%,100%{transform:rotate(-26deg)}50%{transform:rotate(26deg)}}
+@keyframes legSwR{0%,100%{transform:rotate(26deg)}50%{transform:rotate(-26deg)}}
+@keyframes bodyBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes idleBreathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes charJump{
+  0%{transform:translateX(-50%) translateY(0)}
+  28%{transform:translateX(-50%) translateY(-20px)}
+  55%{transform:translateX(-50%) translateY(-5px)}
+  72%{transform:translateX(-50%) translateY(-12px)}
+  100%{transform:translateX(-50%) translateY(0)}
+}
+
+/* ── INTRO PROMPT ── */
+#intro-prompt{
+  position:absolute;z-index:30;
+  background:rgba(255,255,255,.95);border-radius:16px;
+  padding:.9rem 1.4rem;box-shadow:0 4px 24px rgba(0,0,0,.1);
+  font-size:.95rem;font-weight:600;color:#475569;white-space:nowrap;
+}
+#intro-prompt span{color:#0ea5e9}
+
+/* ── INFO CARD ── */
+#info-card{
+  position:absolute;z-index:30;width:320px;
+  transform:translateX(-50%);
+}
+#info-card-inner{
+  background:#fff;border-radius:18px;
+  padding:1.2rem 1.4rem;
+  box-shadow:0 8px 36px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06);
+  border:1px solid rgba(0,0,0,.06);
+  position:relative;
+}
+.card-arrow{
+  position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  font-size:1rem;color:#cbd5e1;
+}
+.card-cat-badge{
+  display:inline-block;padding:.22rem .8rem;border-radius:999px;
+  font-size:.7rem;font-weight:700;color:#fff;margin-bottom:.5rem;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.card-date{font-size:.75rem;color:#94a3b8;margin-bottom:.25rem;font-weight:500}
+.card-title{
+  font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;
+  color:#0f172a;line-height:1.3;margin-bottom:.2rem;
+}
+.now-badge{
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.12rem .5rem;border-radius:999px;font-size:.65rem;font-weight:700;
+  background:rgba(16,185,129,.15);color:#059669;
+  border:1px solid rgba(16,185,129,.3);margin-left:.4rem;vertical-align:middle;
+}
+.now-dot{width:5px;height:5px;border-radius:50%;background:#10b981;
+  animation:nowPulse 1.5s infinite}
+@keyframes nowPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+.card-org{font-size:.82rem;font-weight:600;margin-bottom:.5rem}
+.card-desc{font-size:.82rem;color:#64748b;line-height:1.65;margin-bottom:.7rem}
+.card-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.card-tag{
+  padding:.15rem .55rem;background:#f1f5f9;border-radius:999px;
+  font-size:.7rem;color:#475569;font-weight:500;
+}
+.card-exit{animation:cExit .2s ease forwards}
+.card-enter{animation:cEnter .42s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes cExit{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-12px)}}
+@keyframes cEnter{from{opacity:0;transform:translateY(18px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* ── PROGRESS HUD ── */
+#progress-hud{
+  position:absolute;bottom:18px;right:16px;z-index:30;
+  background:rgba(255,255,255,.92);border-radius:14px;
+  padding:.6rem 1rem;display:flex;flex-direction:column;
+  align-items:center;gap:.45rem;
+  box-shadow:0 2px 16px rgba(0,0,0,.1);backdrop-filter:blur(6px);
+}
+.hud-count{font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;color:#0f172a}
+.hud-dots{display:flex;gap:.3rem;flex-wrap:wrap;max-width:120px;justify-content:center}
+.hud-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;transition:background .3s}
+
+/* ── FOOTER ── */
 #footer{
-  position:relative;z-index:1;
-  text-align:center;
-  padding:7rem 1rem 4rem;
-  border-top:1px solid var(--border);
+  background:linear-gradient(135deg,#f8fafc 0%,#f0fdf4 100%);
+  padding:4rem 2rem;text-align:center;border-top:1px solid #e2e8f0;
 }
-.ft-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(2.2rem,5vw,4.5rem);font-weight:800;line-height:1.1;
-  background:linear-gradient(135deg,#fff,#a855f7 50%,#38bdf8);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:1rem;
+#footer h2{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:#0f172a;margin-bottom:.5rem}
+#footer p{color:#64748b;margin-bottom:1.5rem}
+.footer-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.footer-link{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.6rem 1.4rem;border-radius:999px;font-weight:600;font-size:.9rem;
+  text-decoration:none;transition:transform .15s,box-shadow .15s;
 }
-.ft-sub{color:var(--muted);font-size:1.05rem;margin-bottom:2.5rem}
-.ft-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
-.ft-link{
-  padding:.55rem 1.4rem;border-radius:100px;font-size:.85rem;font-weight:500;
-  text-decoration:none;color:var(--text);
-  border:1px solid var(--border);background:var(--surface);
-  backdrop-filter:blur(10px);transition:all .25s;
-}
-.ft-link:hover{
-  background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.4);
-  color:#c084fc;transform:translateY(-2px);
-}
-.ft-copy{font-size:.78rem;color:#334155}
+.footer-link:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.fl-email{background:#0f172a;color:#fff}
+.fl-li{background:#0077b5;color:#fff}
 
-/* ─── KEYFRAMES ──────────────────────────────────────── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(30px)}
-  to{opacity:1;transform:translateY(0)}
-}
-@keyframes bounce{
-  0%,100%{transform:rotate(45deg) translateY(0)}
-  50%{transform:rotate(45deg) translateY(7px)}
-}
-@keyframes pulseDot{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%{opacity:.4;transform:scale(1.8)}
-}
-@keyframes cardGlow{
-  0%,100%{box-shadow:0 0 0 1px rgba(16,185,129,.2),0 0 40px rgba(16,185,129,.1),0 0 80px rgba(16,185,129,.04)}
-  50%{box-shadow:0 0 0 1px rgba(16,185,129,.35),0 0 60px rgba(16,185,129,.2),0 0 100px rgba(16,185,129,.08)}
-}
-@keyframes shimmer{
-  0%{transform:translateX(-100%)}
-  100%{transform:translateX(100%)}
+@media(max-width:767px){
+  #game-wrapper{display:none}
+  #mobile-fallback{display:block}
 }
 
-/* ─── RESPONSIVE ─────────────────────────────────────── */
-@media(max-width:760px){
-  .ms{grid-template-columns:28px 1fr;gap:0}
-  .ms.left .ms-card,.ms.right .ms-card{
-    grid-column:2;grid-row:1;
-    margin-left:.9rem;margin-right:0;
-  }
-  .ms.left .ms-dot,.ms.right .ms-dot{grid-column:1;grid-row:1}
-  .ms.left .ms-empty,.ms.right .ms-empty{display:none}
-  .ms.from-left .ms-card,.ms.from-right .ms-card{transform:translateX(40px)}
-  .tl-track,.tl-fill{left:14px;transform:none}
-  .tl-traveler{left:14px;transform:translateX(-50%)}
-  .ms-dot{justify-content:flex-start;padding-left:4px}
-  .ms-dot::after{display:none}
-  #timeline{padding:4rem .75rem 6rem}
-  .era-banner{margin:2rem 0 1.5rem}
-  .skills-grid{grid-template-columns:1fr}
+/* ─── PLANE + CONTRAIL ──────────────────────────────── */
+#plane{
+  position:absolute;z-index:60;pointer-events:none;
+  left:-130px;top:26%;opacity:0;
+  filter:drop-shadow(0 3px 12px rgba(0,0,0,.18));
+}
+#plane.in-flight{
+  animation:planeFly 4.5s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+@keyframes planeFly{
+  0%  {left:-130px;top:28%;opacity:0}
+  5%  {opacity:1}
+  40% {top:22%}
+  94% {opacity:1}
+  100%{left:calc(100% + 160px);top:16%;opacity:0}
+}
+#contrail{
+  position:absolute;z-index:59;pointer-events:none;
+  height:3px;border-radius:3px;opacity:0;
+  left:0;top:28%;width:0;
+  background:linear-gradient(to right,transparent,rgba(255,255,255,.85) 55%,rgba(255,255,255,.25));
+}
+#contrail.in-flight{
+  animation:contrailGrow 4.5s forwards;
+}
+@keyframes contrailGrow{
+  0%  {left:4%;width:0;top:28%;opacity:0}
+  7%  {opacity:.9;width:80px}
+  45% {top:23%;width:260px;opacity:.65}
+  88% {width:440px;opacity:.35;top:17.5%}
+  100%{width:500px;opacity:0;top:17%}
+}
+
+/* ─── ERA FLASH OVERLAY ─────────────────────────────── */
+#era-flash{
+  position:absolute;inset:0;z-index:52;
+  pointer-events:none;opacity:0;background:white;
+}
+#era-flash.popping{
+  animation:eraFlash .9s ease-out forwards;
+}
+@keyframes eraFlash{
+  0%  {opacity:0}
+  18% {opacity:.36}
+  100%{opacity:0}
+}
+
+/* ─── LOCATION LABEL (enhanced) ────────────────────── */
+#loc-label.big-flash{
+  animation:locPop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes locPop{
+  0%  {transform:translateX(-50%) scale(.7);opacity:0}
+  60% {transform:translateX(-50%) scale(1.08)}
+  100%{transform:translateX(-50%) scale(1);opacity:1}
 }
 </style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
-<div id="cursor"></div>
-<div id="cursor-trail"></div>
-<div id="prog"></div>
-
-<!-- Floating year tracker -->
-<div id="year-tracker">
-  <div class="yt-year" id="yt-year-text">2016</div>
-  <div class="yt-line"></div>
-</div>
-
-<!-- Back to top -->
-<div id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
-
-<nav>
-  <div class="nav-logo">DJ</div>
-  <ul class="nav-links">
-    <li><a href="#hero">Home</a></li>
-    <li><a href="#timeline">Journey</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#footer">Connect</a></li>
-  </ul>
-</nav>
-
-<!-- ══════ HERO ══════ -->
+<!-- ── HERO ── -->
 <section id="hero">
   <p class="hero-eyebrow">The story of</p>
-  <h1 class="hero-name">Dhruv Jain</h1>
-  <p class="hero-tagline">From engineering circuits in Delhi to driving strategy in Dallas — a decade of curiosity, code, and calculated moves.</p>
-  <div class="hero-pills">
-    <span class="pill">Data Analytics</span>
-    <span class="pill blue">Business Strategy</span>
-    <span class="pill green">Machine Learning</span>
-    <span class="pill amber">Entrepreneurship</span>
+  <h1 class="hero-title">Dhruv Jain</h1>
+  <p class="hero-sub">From Delhi to Los Angeles to Dallas — a decade of progress, one step at a time</p>
+  <div class="hero-legend">
+    <span class="legend-pill" style="background:var(--edu)">Education</span>
+    <span class="legend-pill" style="background:var(--work)">Work</span>
+    <span class="legend-pill" style="background:var(--startup)">Entrepreneurship</span>
+    <span class="legend-pill" style="background:var(--research)">Research</span>
+    <span class="legend-pill" style="background:var(--achieve)">Achievement</span>
   </div>
-  <div class="hero-stats">
-    <div class="hs"><div class="hs-num">10<span style="color:#a855f7">+</span></div><div class="hs-lbl">Years Journey</div></div>
-    <div class="hs"><div class="hs-num">3</div><div class="hs-lbl">Promotions</div></div>
-    <div class="hs"><div class="hs-num">65<span style="color:#38bdf8">+</span></div><div class="hs-lbl">Projects Delivered</div></div>
-    <div class="hs"><div class="hs-num">2</div><div class="hs-lbl">Countries</div></div>
-  </div>
-  <div class="scroll-cta" onclick="document.getElementById('timeline').scrollIntoView({behavior:'smooth'})">
-    <span>Scroll to explore</span>
-    <div class="scroll-arr"></div>
+  <div class="hero-location-note">🇮🇳 Delhi → ✈️ Los Angeles → 🤠 Dallas</div>
+  <div class="hero-cta">
+    <span>Scroll to walk the journey</span>
+    <span class="bounce-arrow">↓</span>
   </div>
 </section>
 
-<!-- ══════ TIMELINE ══════ -->
-<section id="timeline">
-  <div class="tl-track"></div>
-  <div class="tl-fill" id="tl-fill"></div>
-  <div class="tl-traveler" id="tl-traveler"></div>
+<!-- ── MOBILE FALLBACK ── -->
+<div id="mobile-fallback">
+  <div class="mob-note">Best experienced on desktop — here's the condensed journey:</div>
+</div>
 
-  <!-- Chapter I -->
-  <div class="era-banner" data-era>
-    <div class="era-line"></div>
-    <div class="era-inner">
-      <span class="era-chapter">Chapter I</span>
-      <span class="era-sep">·</span>
-      <span class="era-title">Student Years</span>
-    </div>
-    <div class="era-line flip"></div>
+<!-- ── GAME ── -->
+<div id="game-wrapper">
+ <div id="game-sticky">
+
+  <!-- Sky layers -->
+  <div class="sky-layer" id="sky-delhi"></div>
+  <div class="sky-layer" id="sky-la"></div>
+  <div class="sky-layer" id="sky-dallas"></div>
+
+  <!-- Sun -->
+  <div id="sun">
+    <div class="sun-rays"></div>
+    <div class="sun-circle"></div>
   </div>
 
-  <!-- 2016 -->
-  <div class="yr-mark" data-yr="2016"><div class="yr-inner"><div class="yr-txt">2016</div></div></div>
+  <!-- Location label -->
+  <div id="loc-label"></div>
 
-  <div class="ms left edu from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Education</div>
-      <div class="c-date">July 2016 — May 2020</div>
-      <div class="c-title">BTech in Electrical & Electronics Engineering</div>
-      <div class="c-org">Delhi Technological University (DTU)</div>
-      <div class="c-desc">Enrolled in EEE but followed the pull of Computer Science at every turn — stacking CS electives, diving into data structures, and treating every summer as a self-directed curriculum. The engineering rigour became the foundation for everything that followed.</div>
-      <div class="tags">
-        <span class="tag">Data Structures & Algorithms</span>
-        <span class="tag">Java</span>
-        <span class="tag">Machine Learning</span>
-        <span class="tag">Self-Directed Learning</span>
-      </div>
-    </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
+  <!-- Plane (flies across on Delhi→LA transition) -->
+  <div id="plane">
+    <svg viewBox="0 0 110 50" width="110" height="50" xmlns="http://www.w3.org/2000/svg">
+      <!-- fuselage -->
+      <ellipse cx="54" cy="25" rx="47" ry="9" fill="white" fill-opacity=".93"/>
+      <!-- nose cone -->
+      <path d="M97,25 Q108,25 106,20 Q103,16 97,18 Z" fill="white" fill-opacity=".9"/>
+      <!-- cockpit window shine -->
+      <path d="M90,17 Q98,20 100,23 Q94,21 90,19 Z" fill="#bae6fd" fill-opacity=".8"/>
+      <!-- tail vertical fin -->
+      <path d="M10,25 L4,8 Q7,9 13,17 L16,25 Z" fill="white" fill-opacity=".82"/>
+      <!-- tail horizontal fins -->
+      <path d="M10,25 L4,42 Q7,41 13,33 L16,25 Z" fill="white" fill-opacity=".78"/>
+      <!-- main swept-back wings -->
+      <path d="M56,25 L76,3 L83,8 L65,25 Z" fill="white" fill-opacity=".88"/>
+      <path d="M56,25 L76,47 L83,42 L65,25 Z" fill="white" fill-opacity=".85"/>
+      <!-- engine pods under wings -->
+      <ellipse cx="75" cy="7" rx="7" ry="3" transform="rotate(-22,75,7)" fill="white" fill-opacity=".72"/>
+      <ellipse cx="75" cy="43" rx="7" ry="3" transform="rotate(22,75,43)" fill="white" fill-opacity=".7"/>
+      <!-- windows -->
+      <circle cx="71" cy="22" r="2.2" fill="#7dd3fc" fill-opacity=".75"/>
+      <circle cx="79" cy="22" r="2.2" fill="#7dd3fc" fill-opacity=".75"/>
+      <circle cx="87" cy="22" r="2.2" fill="#7dd3fc" fill-opacity=".75"/>
+    </svg>
   </div>
+  <!-- Contrail -->
+  <div id="contrail"></div>
+  <!-- Era flash overlay -->
+  <div id="era-flash"></div>
 
-  <!-- 2017 -->
-  <div class="yr-mark" data-yr="2017"><div class="yr-inner"><div class="yr-txt">2017</div></div></div>
+  <!-- Parallax bg (clouds, hills, city silhouettes) -->
+  <div id="parallax-bg">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="hill hill-1"></div>
+    <div class="hill hill-2"></div>
+    <div class="hill hill-3"></div>
 
-  <div class="ms right startup from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Freelance</div>
-      <div class="c-date">July 2017 — July 2020</div>
-      <div class="c-title">Freelance Designer & Web Developer</div>
-      <div class="c-org">Independent · Remote</div>
-      <div class="c-desc">While classmates were hitting the books, Dhruv was building real products for real clients. Three years of freelance graphic design and web development — learning to ship, iterate, and communicate value — ran parallel to the entire undergraduate journey.</div>
-      <div class="tags">
-        <span class="tag">HTML / CSS / JS</span>
-        <span class="tag">Graphic Design</span>
-        <span class="tag">Client Management</span>
-        <span class="tag">Product Delivery</span>
-      </div>
+    <!-- Delhi silhouette: mosque dome, minarets, dense buildings -->
+    <div class="city-sil" id="sil-delhi">
+      <svg viewBox="0 0 1600 200" width="100%" height="200" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <!-- Dense Delhi building sprawl -->
+        <path d="M0,200 L0,140 L40,140 L40,120 L70,120 L70,100 L90,100 L90,120 L110,120 L110,80 L125,80 L125,120 L140,120 L140,105 L155,105 L155,90 L160,85 L165,90 L165,105 L185,105 L185,120 L210,120 L210,100 L225,100 L225,120 L250,120 L250,140 L280,140 L280,200 Z" fill="rgba(120,53,15,.45)"/>
+        <!-- Jama Masjid style centre piece -->
+        <rect x="340" y="100" width="10" height="90" rx="4" fill="rgba(120,53,15,.5)"/><!-- left minaret -->
+        <rect x="450" y="100" width="10" height="90" rx="4" fill="rgba(120,53,15,.5)"/><!-- right minaret -->
+        <circle cx="345" cy="96" r="7" fill="rgba(120,53,15,.5)"/><!-- minaret top l -->
+        <circle cx="455" cy="96" r="7" fill="rgba(120,53,15,.5)"/><!-- minaret top r -->
+        <path d="M320,190 L320,150 Q400,95 480,150 L480,190 Z" fill="rgba(120,53,15,.5)"/><!-- main dome arch -->
+        <ellipse cx="400" cy="115" rx="45" ry="38" fill="rgba(120,53,15,.52)"/><!-- dome -->
+        <rect x="380" y="75" width="5" height="30" fill="rgba(120,53,15,.5)"/><!-- finial -->
+        <!-- More buildings right side -->
+        <path d="M540,200 L540,130 L570,130 L570,110 L590,100 L610,110 L610,130 L640,130 L640,115 L660,115 L660,130 L690,130 L690,120 L710,120 L710,140 L730,140 L730,130 L760,130 L760,140 L800,140 L800,200 Z" fill="rgba(120,53,15,.4)"/>
+        <!-- Qutub Minar style tower (right) -->
+        <path d="M900,200 L900,40 Q903,35 907,40 L920,200 Z" fill="rgba(120,53,15,.5)"/>
+        <ellipse cx="910" cy="38" rx="10" ry="5" fill="rgba(120,53,15,.5)"/>
+        <!-- Far right buildings -->
+        <path d="M980,200 L980,150 L1010,150 L1010,130 L1040,130 L1040,145 L1080,145 L1080,130 L1110,130 L1110,150 L1150,150 L1150,200 Z" fill="rgba(120,53,15,.35)"/>
+        <path d="M1200,200 L1200,155 L1250,155 L1250,145 L1280,145 L1280,155 L1330,155 L1330,200 Z" fill="rgba(120,53,15,.3)"/>
+      </svg>
     </div>
-  </div>
 
-  <!-- 2019 -->
-  <div class="yr-mark" data-yr="2019"><div class="yr-inner"><div class="yr-txt">2019</div></div></div>
-
-  <div class="ms left work from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Internship</div>
-      <div class="c-date">June 2019 — July 2019</div>
-      <div class="c-title">Machine Learning Intern</div>
-      <div class="c-org">Cognitior · Gurgaon, India</div>
-      <div class="c-desc">First professional foray into the ML world. Analysed global warming patterns through time series analysis and explored data imputation techniques using KNN and Decision Tree Pruning — translating classroom theory into applied research.</div>
-      <div class="tags">
-        <span class="tag">Time Series Analysis</span>
-        <span class="tag">KNN</span>
-        <span class="tag">Decision Trees</span>
-        <span class="tag">Python</span>
-      </div>
+    <!-- LA silhouette: palm trees, Hollywood hills -->
+    <div class="city-sil" id="sil-la">
+      <svg viewBox="0 0 1600 200" width="100%" height="200" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <!-- Rolling Hollywood hills -->
+        <ellipse cx="200" cy="200" rx="280" ry="110" fill="rgba(21,128,61,.25)"/>
+        <ellipse cx="600" cy="210" rx="340" ry="120" fill="rgba(21,128,61,.2)"/>
+        <ellipse cx="1100" cy="205" rx="300" ry="105" fill="rgba(21,128,61,.22)"/>
+        <!-- Palm tree 1 -->
+        <rect x="118" y="95" width="7" height="105" rx="3" fill="rgba(120,53,15,.6)"/>
+        <ellipse cx="121" cy="90" rx="30" ry="10" transform="rotate(-35,121,90)" fill="rgba(21,128,61,.7)"/>
+        <ellipse cx="121" cy="90" rx="28" ry="9" transform="rotate(0,121,90)" fill="rgba(21,128,61,.7)"/>
+        <ellipse cx="121" cy="90" rx="30" ry="10" transform="rotate(35,121,90)" fill="rgba(21,128,61,.7)"/>
+        <ellipse cx="121" cy="92" rx="26" ry="9" transform="rotate(-70,121,92)" fill="rgba(21,128,61,.65)"/>
+        <ellipse cx="121" cy="92" rx="26" ry="9" transform="rotate(70,121,92)" fill="rgba(21,128,61,.65)"/>
+        <!-- Palm tree 2 -->
+        <rect x="348" y="80" width="7" height="120" rx="3" fill="rgba(120,53,15,.55)"/>
+        <ellipse cx="351" cy="75" rx="32" ry="11" transform="rotate(-40,351,75)" fill="rgba(21,128,61,.65)"/>
+        <ellipse cx="351" cy="75" rx="30" ry="10" transform="rotate(0,351,75)" fill="rgba(21,128,61,.65)"/>
+        <ellipse cx="351" cy="75" rx="32" ry="11" transform="rotate(40,351,75)" fill="rgba(21,128,61,.65)"/>
+        <ellipse cx="351" cy="77" rx="28" ry="9" transform="rotate(-75,351,77)" fill="rgba(21,128,61,.6)"/>
+        <!-- UCLA Royce Hall hint -->
+        <rect x="520" y="110" width="100" height="90" rx="4" fill="rgba(30,64,175,.2)"/>
+        <path d="M518,112 Q570,75 622,112" fill="rgba(30,64,175,.22)"/>
+        <rect x="540" y="92" width="12" height="20" fill="rgba(30,64,175,.25)"/>
+        <rect x="568" y="92" width="12" height="20" fill="rgba(30,64,175,.25)"/>
+        <!-- Palm tree 3 -->
+        <rect x="720" y="90" width="6" height="110" rx="3" fill="rgba(120,53,15,.5)"/>
+        <ellipse cx="723" cy="86" rx="28" ry="9" transform="rotate(-38,723,86)" fill="rgba(21,128,61,.62)"/>
+        <ellipse cx="723" cy="86" rx="26" ry="9" transform="rotate(0,723,86)" fill="rgba(21,128,61,.62)"/>
+        <ellipse cx="723" cy="86" rx="28" ry="9" transform="rotate(38,723,86)" fill="rgba(21,128,61,.62)"/>
+        <!-- Hollywood sign hint (simple rectangles on hill) -->
+        <rect x="870" y="120" width="8" height="22" rx="1" fill="rgba(255,255,255,.4)"/>
+        <rect x="882" y="115" width="8" height="27" rx="1" fill="rgba(255,255,255,.4)"/>
+        <rect x="894" y="120" width="8" height="22" rx="1" fill="rgba(255,255,255,.4)"/>
+        <rect x="906" y="118" width="8" height="24" rx="1" fill="rgba(255,255,255,.4)"/>
+        <!-- Palm tree 4 -->
+        <rect x="1060" y="85" width="7" height="115" rx="3" fill="rgba(120,53,15,.5)"/>
+        <ellipse cx="1063" cy="80" rx="30" ry="10" transform="rotate(-36,1063,80)" fill="rgba(21,128,61,.6)"/>
+        <ellipse cx="1063" cy="80" rx="28" ry="9" transform="rotate(0,1063,80)" fill="rgba(21,128,61,.6)"/>
+        <ellipse cx="1063" cy="80" rx="30" ry="10" transform="rotate(36,1063,80)" fill="rgba(21,128,61,.6)"/>
+      </svg>
     </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
-  </div>
 
-  <div class="ms right edu from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Teaching</div>
-      <div class="c-date">June 2019 — October 2019</div>
-      <div class="c-title">Teaching Assistant — Data Structures & Algorithms</div>
-      <div class="c-org">Coding Ninjas India · Delhi</div>
-      <div class="c-desc">Turned mastery into mentorship. Helped students crack algorithmic problems in Java and personally resolved over 550 queries — solidifying both the subject matter and the ability to explain complex ideas clearly.</div>
-      <div class="c-nums">
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="550">0</div>
-          <div class="c-num-lbl">Student Queries Resolved</div>
-        </div>
-      </div>
-      <div class="tags">
-        <span class="tag">Java</span>
-        <span class="tag">Algorithms</span>
-        <span class="tag">Mentoring</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="ms left startup from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Co-Founder</div>
-      <div class="c-date">October 2019 — June 2020</div>
-      <div class="c-title">Co-Founder</div>
-      <div class="c-org">Ziel · Delhi, India</div>
-      <div class="c-desc">In the final year of undergrad, co-built a platform to fix campus placements in India — connecting top talent from colleges beyond the metros with companies hunting for their next great hire. Built with 3 co-founders, it was Dhruv's first real lesson in product, pitch, and perseverance.</div>
-      <div class="c-desc" style="margin-top:-.4rem"><em style="color:#fcd34d;font-style:normal">"Bridging students from Top Colleges with organisations looking to hire the brightest minds."</em></div>
-      <div class="tags">
-        <span class="tag">Startup</span>
-        <span class="tag">Product Strategy</span>
-        <span class="tag">Recruitment Tech</span>
-        <span class="tag">Leadership</span>
-      </div>
-    </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
-  </div>
-
-  <!-- Chapter II -->
-  <div class="era-banner" data-era>
-    <div class="era-line"></div>
-    <div class="era-inner">
-      <span class="era-chapter">Chapter II</span>
-      <span class="era-sep">·</span>
-      <span class="era-title">Corporate Era</span>
-    </div>
-    <div class="era-line flip"></div>
-  </div>
-
-  <!-- 2020 -->
-  <div class="yr-mark" data-yr="2020"><div class="yr-inner"><div class="yr-txt">2020</div></div></div>
-
-  <div class="ms right edu from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Graduation</div>
-      <div class="c-date">May 2020</div>
-      <div class="c-title">BTech — Electrical & Electronics Engineering</div>
-      <div class="c-org">Delhi Technological University · Delhi, India</div>
-      <div class="c-desc">Closed the chapter on four years of building, learning, and side-questing. Published two research papers in fuzzy logic systems, and graduated with a portfolio far broader than the degree itself suggested.</div>
-      <div class="tags">
-        <span class="tag">Research Publications</span>
-        <span class="tag">Fuzzy Logic</span>
-        <span class="tag">Solar PV Systems</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="ms left work from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Full-Time</div>
-      <div class="c-date">August 2020 — July 2022</div>
-      <div class="c-title">Data Analyst — Merchant Analytics</div>
-      <div class="c-org">American Express · India (EMEA Markets)</div>
-      <div class="c-desc">Landed at one of the world's most storied financial brands and immediately went deep. Supported marketing partners and senior leadership across EMEA with BI studies, customer retention analytics, and NPS drivers spanning luxury retail, lodging, airlines, and e-commerce.</div>
-      <div class="c-nums">
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="65" data-suffix="+">0</div>
-          <div class="c-num-lbl">Projects Delivered</div>
-        </div>
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="360" data-prefix="$" data-suffix="K+">0</div>
-          <div class="c-num-lbl">Dashboard Revenue</div>
-        </div>
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="25" data-suffix="%">0</div>
-          <div class="c-num-lbl">Coverage Expanded</div>
-        </div>
-      </div>
-      <div class="tags">
-        <span class="tag">Tableau</span>
-        <span class="tag">Python</span>
-        <span class="tag">Hive SQL</span>
-        <span class="tag">BI Dashboards</span>
-        <span class="tag">Google Maps API</span>
-        <span class="tag">Customer Analytics</span>
-      </div>
-    </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
-  </div>
-
-  <!-- 2022 -->
-  <div class="yr-mark" data-yr="2022"><div class="yr-inner"><div class="yr-txt">2022</div></div></div>
-
-  <div class="ms right work from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Promotion</div>
-      <div class="c-date">August 2022 — August 2023</div>
-      <div class="c-title">Senior Analyst · Assistant Manager, Merchant Analytics</div>
-      <div class="c-org">American Express · India</div>
-      <div class="c-desc">Promoted to Assistant Manager within two years. Devised share-of-wallet methodologies for senior leadership, built customer segmentation for targeted ad campaigns, and scaled a quarterly insights report across US, LACC, EMEA, and APAC.</div>
-      <div class="c-nums">
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="40" data-suffix=" days">0</div>
-          <div class="c-num-lbl">→ 2 min turnaround</div>
-        </div>
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="4">0</div>
-          <div class="c-num-lbl">Global Regions Scaled</div>
-        </div>
-      </div>
-      <div class="tags">
-        <span class="tag">Share of Wallet</span>
-        <span class="tag">Stakeholder Management</span>
-        <span class="tag">Campaign Analytics</span>
-        <span class="tag">EMEA / APAC</span>
-      </div>
+    <!-- Dallas silhouette: skyscrapers, Reunion Tower -->
+    <div class="city-sil" id="sil-dallas">
+      <svg viewBox="0 0 1600 200" width="100%" height="200" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <!-- Flat Texas horizon base -->
+        <rect x="0" y="175" width="1600" height="25" fill="rgba(3,105,161,.12)"/>
+        <!-- Buildings left cluster -->
+        <rect x="50" y="90" width="45" height="110" fill="rgba(3,105,161,.32)"/>
+        <rect x="55" y="80" width="35" height="15" fill="rgba(3,105,161,.28)"/>
+        <rect x="110" y="70" width="38" height="130" fill="rgba(3,105,161,.38)"/>
+        <rect x="115" y="60" width="28" height="15" fill="rgba(3,105,161,.35)"/>
+        <rect x="162" y="100" width="32" height="100" fill="rgba(3,105,161,.28)"/>
+        <!-- Bank of America Plaza style (tallest) -->
+        <rect x="220" y="40" width="42" height="160" fill="rgba(3,105,161,.42)"/>
+        <rect x="228" y="30" width="26" height="14" fill="rgba(3,105,161,.42)"/>
+        <!-- Antenna on top -->
+        <rect x="240" y="10" width="3" height="22" fill="rgba(3,105,161,.5)"/>
+        <!-- Reunion Tower -->
+        <rect x="330" y="120" width="8" height="80" fill="rgba(3,105,161,.5)"/>
+        <circle cx="334" cy="112" r="18" fill="rgba(3,105,161,.52)"/>
+        <!-- Dots on sphere -->
+        <circle cx="327" cy="110" r="2" fill="rgba(255,255,255,.3)"/>
+        <circle cx="334" cy="106" r="2" fill="rgba(255,255,255,.3)"/>
+        <circle cx="341" cy="110" r="2" fill="rgba(255,255,255,.3)"/>
+        <circle cx="334" cy="116" r="2" fill="rgba(255,255,255,.3)"/>
+        <!-- More buildings right -->
+        <rect x="390" y="60" width="36" height="140" fill="rgba(3,105,161,.35)"/>
+        <rect x="440" y="85" width="30" height="115" fill="rgba(3,105,161,.28)"/>
+        <rect x="484" y="75" width="34" height="125" fill="rgba(3,105,161,.32)"/>
+        <!-- Mid-distance buildings -->
+        <rect x="560" y="105" width="28" height="95" fill="rgba(3,105,161,.22)"/>
+        <rect x="600" y="90" width="32" height="110" fill="rgba(3,105,161,.25)"/>
+        <rect x="648" y="115" width="24" height="85" fill="rgba(3,105,161,.2)"/>
+        <!-- Far buildings -->
+        <rect x="800" y="125" width="40" height="75" fill="rgba(3,105,161,.18)"/>
+        <rect x="860" y="115" width="35" height="85" fill="rgba(3,105,161,.2)"/>
+        <rect x="920" y="130" width="30" height="70" fill="rgba(3,105,161,.15)"/>
+      </svg>
     </div>
   </div>
 
-  <!-- Chapter III -->
-  <div class="era-banner" data-era>
-    <div class="era-line"></div>
-    <div class="era-inner">
-      <span class="era-chapter">Chapter III</span>
-      <span class="era-sep">·</span>
-      <span class="era-title">MBA & Reinvention</span>
-    </div>
-    <div class="era-line flip"></div>
+  <!-- World (scrolls left) -->
+  <div id="world"></div>
+
+  <!-- Ground -->
+  <div id="ground-wrap">
+    <div class="ground-layer" id="gnd-delhi"></div>
+    <div class="ground-layer" id="gnd-la"></div>
+    <div class="ground-layer" id="gnd-dallas"></div>
   </div>
 
-  <!-- 2023 -->
-  <div class="yr-mark" data-yr="2023"><div class="yr-inner"><div class="yr-txt">2023</div></div></div>
+  <!-- ══ CHARACTER ══ -->
+  <div id="character" class="era-young char-idle">
 
-  <div class="ms left edu from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Graduate School</div>
-      <div class="c-date">September 2023 — December 2024</div>
-      <div class="c-title">MS in Business Analytics (MSBA)</div>
-      <div class="c-org">UCLA Anderson School of Management · Los Angeles, CA</div>
-      <div class="c-desc">Left a thriving corporate career and crossed an ocean to pursue the degree that would bridge business instinct with analytical rigour. Moved to the United States to join one of the world's premier business analytics programmes — a defining leap of faith that paid off.</div>
-      <div class="tags">
-        <span class="tag">Business Analytics</span>
-        <span class="tag">R</span>
-        <span class="tag">Statistical Modelling</span>
-        <span class="tag">Machine Learning</span>
-        <span class="tag">UCLA Anderson</span>
-      </div>
+    <!-- Young WALK: Mario-style side profile, red cap + blue tee + jeans + backpack -->
+    <div class="char-v" id="cv-young-walk">
+      <svg viewBox="0 0 55 95" width="55" height="95">
+        <!-- Backpack (behind everything) -->
+        <rect x="1" y="34" width="14" height="19" rx="4" fill="#1e3a8a"/>
+        <rect x="3" y="37" width="10" height="13" rx="2" fill="#1e40af"/>
+        <line x1="8" y1="37" x2="8" y2="50" stroke="#3b82f6" stroke-width=".8" stroke-dasharray="2,1.5"/>
+        <path d="M7,34 Q11,28 17,30" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
+        <!-- back arm -->
+        <g class="arm-l"><rect x="5" y="38" width="12" height="14" rx="6" fill="#fbbf24"/></g>
+        <!-- body -->
+        <rect x="17" y="35" width="22" height="19" rx="4" fill="#bfdbfe"/>
+        <path d="M22,35 Q28,40 34,35" fill="none" stroke="#93c5fd" stroke-width="1.5"/>
+        <!-- back leg -->
+        <g class="leg-l">
+          <rect x="17" y="53" width="10" height="19" rx="4" fill="#1e3a5f"/>
+          <rect x="14" y="69" width="16" height="9" rx="5" fill="#e2e8f0"/>
+        </g>
+        <!-- front leg -->
+        <g class="leg-r">
+          <rect x="28" y="53" width="10" height="19" rx="4" fill="#1e3a5f"/>
+          <rect x="26" y="69" width="16" height="9" rx="5" fill="#e2e8f0"/>
+        </g>
+        <!-- front arm -->
+        <g class="arm-r"><rect x="39" y="38" width="12" height="14" rx="6" fill="#fbbf24"/></g>
+        <!-- walk-body: head + cap bob together -->
+        <g class="walk-body">
+          <circle cx="28" cy="19" r="15" fill="#fbbf24"/>
+          <!-- cap crown (red, top semicircle) -->
+          <path d="M13,19 A15,15 0 0,1 43,19 Z" fill="#dc2626"/>
+          <!-- cap brim (extends right/forward) -->
+          <rect x="32" y="16" width="18" height="6" rx="3" fill="#b91c1c"/>
+          <!-- back ear (lower half) -->
+          <ellipse cx="13" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <!-- eyebrow just below cap line -->
+          <path d="M33,21 Q37,19 42,20" fill="none" stroke="#78350f" stroke-width="2" stroke-linecap="round"/>
+          <!-- big white eye (lower half of head) -->
+          <circle cx="37" cy="25" r="4.5" fill="white"/>
+          <circle cx="39" cy="25" r="2.8" fill="#1e293b"/>
+          <circle cx="39.5" cy="24" r="1.1" fill="white"/>
+          <!-- round nose -->
+          <ellipse cx="43" cy="28" rx="4" ry="3" fill="#f59e0b"/>
+          <!-- mouth -->
+          <path d="M37,31 Q41,34 43,31" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round"/>
+        </g>
+      </svg>
     </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
+
+    <!-- Young IDLE: Mario-style front-facing, red cap + backpack straps -->
+    <div class="char-v" id="cv-young-idle">
+      <svg viewBox="0 0 55 95" width="55" height="95">
+        <g class="idle-body">
+          <!-- backpack straps -->
+          <line x1="20" y1="36" x2="15" y2="60" stroke="#1e3a8a" stroke-width="4" stroke-linecap="round"/>
+          <line x1="34" y1="36" x2="39" y2="60" stroke="#1e3a8a" stroke-width="4" stroke-linecap="round"/>
+          <rect x="15" y="51" width="25" height="10" rx="3" fill="#1e3a8a"/>
+          <!-- body -->
+          <rect x="15" y="36" width="25" height="19" rx="4" fill="#bfdbfe"/>
+          <path d="M20,36 Q27,42 34,36" fill="none" stroke="#93c5fd" stroke-width="1.5"/>
+          <!-- arms -->
+          <rect x="4" y="37" width="11" height="20" rx="5" fill="#fbbf24"/>
+          <rect x="40" y="37" width="11" height="20" rx="5" fill="#fbbf24"/>
+          <!-- legs -->
+          <rect x="15" y="54" width="11" height="21" rx="4" fill="#1e3a5f"/>
+          <rect x="29" y="54" width="11" height="21" rx="4" fill="#1e3a5f"/>
+          <!-- shoes -->
+          <rect x="12" y="72" width="16" height="9" rx="5" fill="#e2e8f0"/>
+          <rect x="27" y="72" width="16" height="9" rx="5" fill="#e2e8f0"/>
+          <!-- head -->
+          <circle cx="27" cy="19" r="15" fill="#fbbf24"/>
+          <!-- cap crown (red, top semicircle) -->
+          <path d="M12,19 A15,15 0 0,1 42,19 Z" fill="#dc2626"/>
+          <!-- cap brim (wide, front view) -->
+          <rect x="9" y="16" width="36" height="6" rx="3" fill="#b91c1c"/>
+          <!-- ears -->
+          <ellipse cx="12" cy="23" rx="3" ry="4.5" fill="#f59e0b"/>
+          <ellipse cx="42" cy="23" rx="3" ry="4.5" fill="#f59e0b"/>
+          <!-- ears (lower half) -->
+          <ellipse cx="12" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <ellipse cx="42" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <!-- eyebrows just below cap line -->
+          <path d="M16,21 Q21,19 25,20" fill="none" stroke="#78350f" stroke-width="2" stroke-linecap="round"/>
+          <path d="M29,20 Q33,19 38,21" fill="none" stroke="#78350f" stroke-width="2" stroke-linecap="round"/>
+          <!-- big white eyes (lower half of head) -->
+          <circle cx="21" cy="25" r="4.5" fill="white"/>
+          <circle cx="33" cy="25" r="4.5" fill="white"/>
+          <circle cx="21" cy="26" r="2.8" fill="#1e293b"/>
+          <circle cx="33" cy="26" r="2.8" fill="#1e293b"/>
+          <circle cx="22" cy="24.5" r="1.1" fill="white"/>
+          <circle cx="34" cy="24.5" r="1.1" fill="white"/>
+          <!-- round nose -->
+          <ellipse cx="27" cy="29" rx="3.5" ry="2.5" fill="#f59e0b"/>
+          <!-- big Mario smile -->
+          <path d="M20,32 Q27,36 34,32" stroke="#92400e" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- AmEx WALK: Mario-style side profile, navy cap + blue dress shirt + dark slacks -->
+    <div class="char-v" id="cv-amex-walk">
+      <svg viewBox="0 0 55 95" width="55" height="95">
+        <!-- back arm -->
+        <g class="arm-l"><rect x="5" y="38" width="12" height="14" rx="6" fill="#fbbf24"/></g>
+        <!-- body / dress shirt -->
+        <rect x="17" y="35" width="22" height="19" rx="4" fill="#3b82f6"/>
+        <path d="M24,35 L27,43 L30,35" fill="none" stroke="#2563eb" stroke-width="2"/>
+        <!-- back leg -->
+        <g class="leg-l">
+          <rect x="17" y="53" width="10" height="19" rx="4" fill="#374151"/>
+          <rect x="14" y="69" width="16" height="9" rx="5" fill="#1c1917"/>
+        </g>
+        <!-- front leg -->
+        <g class="leg-r">
+          <rect x="28" y="53" width="10" height="19" rx="4" fill="#374151"/>
+          <rect x="26" y="69" width="16" height="9" rx="5" fill="#1c1917"/>
+        </g>
+        <!-- front arm -->
+        <g class="arm-r"><rect x="39" y="38" width="12" height="14" rx="6" fill="#fbbf24"/></g>
+        <!-- walk-body: head + cap bob together -->
+        <g class="walk-body">
+          <circle cx="28" cy="19" r="15" fill="#fbbf24"/>
+          <!-- cap crown (navy) -->
+          <path d="M13,19 A15,15 0 0,1 43,19 Z" fill="#1e3a8a"/>
+          <!-- cap brim -->
+          <rect x="32" y="16" width="18" height="6" rx="3" fill="#1e2f6e"/>
+          <!-- back ear (lower half) -->
+          <ellipse cx="13" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <!-- eyebrow just below cap line -->
+          <path d="M33,21 Q37,19 42,20" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
+          <!-- big white eye (lower half) -->
+          <circle cx="37" cy="25" r="4.5" fill="white"/>
+          <circle cx="39" cy="25" r="2.8" fill="#1e293b"/>
+          <circle cx="39.5" cy="24" r="1.1" fill="white"/>
+          <!-- round nose -->
+          <ellipse cx="43" cy="28" rx="4" ry="3" fill="#f59e0b"/>
+          <!-- smirk -->
+          <path d="M37,31 Q41,34 43,31" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- AmEx IDLE: Mario-style front-facing, navy cap + dress shirt + tie -->
+    <div class="char-v" id="cv-amex-idle">
+      <svg viewBox="0 0 55 95" width="55" height="95">
+        <g class="idle-body">
+          <!-- body / dress shirt -->
+          <rect x="15" y="36" width="25" height="19" rx="4" fill="#3b82f6"/>
+          <path d="M22,36 L27,45 L32,36" fill="none" stroke="#2563eb" stroke-width="2"/>
+          <!-- small tie -->
+          <path d="M25,41 L27,50 L29,41 Q28,37 27,37 Q26,37 25,41 Z" fill="#ef4444"/>
+          <!-- arms -->
+          <rect x="4" y="37" width="11" height="20" rx="5" fill="#fbbf24"/>
+          <rect x="40" y="37" width="11" height="20" rx="5" fill="#fbbf24"/>
+          <!-- legs / slacks -->
+          <rect x="15" y="54" width="11" height="21" rx="4" fill="#374151"/>
+          <rect x="29" y="54" width="11" height="21" rx="4" fill="#374151"/>
+          <!-- shoes -->
+          <rect x="12" y="72" width="16" height="9" rx="5" fill="#1c1917"/>
+          <rect x="27" y="72" width="16" height="9" rx="5" fill="#1c1917"/>
+          <!-- head -->
+          <circle cx="27" cy="19" r="15" fill="#fbbf24"/>
+          <!-- cap crown (navy) -->
+          <path d="M12,19 A15,15 0 0,1 42,19 Z" fill="#1e3a8a"/>
+          <!-- cap brim (wide) -->
+          <rect x="9" y="16" width="36" height="6" rx="3" fill="#1e2f6e"/>
+          <!-- ears (lower half) -->
+          <ellipse cx="12" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <ellipse cx="42" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <!-- eyebrows just below cap line -->
+          <path d="M16,21 Q21,19 25,20" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
+          <path d="M29,20 Q33,19 38,21" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
+          <!-- big white eyes (lower half) -->
+          <circle cx="21" cy="25" r="4.5" fill="white"/>
+          <circle cx="33" cy="25" r="4.5" fill="white"/>
+          <circle cx="21" cy="26" r="2.8" fill="#1e293b"/>
+          <circle cx="33" cy="26" r="2.8" fill="#1e293b"/>
+          <circle cx="22" cy="24.5" r="1.1" fill="white"/>
+          <circle cx="34" cy="24.5" r="1.1" fill="white"/>
+          <!-- round nose -->
+          <ellipse cx="27" cy="29" rx="3.5" ry="2.5" fill="#f59e0b"/>
+          <!-- confident smile -->
+          <path d="M20,32 Q27,36 34,32" stroke="#92400e" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- USA WALK: Mario-style side profile, gold cap + teal polo + grey chinos -->
+    <div class="char-v" id="cv-usa-walk">
+      <svg viewBox="0 0 55 95" width="55" height="95">
+        <!-- back arm -->
+        <g class="arm-l"><rect x="5" y="38" width="12" height="14" rx="6" fill="#fbbf24"/></g>
+        <!-- body / teal polo -->
+        <rect x="17" y="35" width="22" height="19" rx="4" fill="#0d9488"/>
+        <path d="M22,35 Q28,40 34,35" fill="none" stroke="#0f766e" stroke-width="1.5"/>
+        <!-- back leg -->
+        <g class="leg-l">
+          <rect x="17" y="53" width="10" height="19" rx="4" fill="#475569"/>
+          <rect x="14" y="69" width="16" height="9" rx="5" fill="#94a3b8"/>
+        </g>
+        <!-- front leg -->
+        <g class="leg-r">
+          <rect x="28" y="53" width="10" height="19" rx="4" fill="#475569"/>
+          <rect x="26" y="69" width="16" height="9" rx="5" fill="#94a3b8"/>
+        </g>
+        <!-- front arm -->
+        <g class="arm-r"><rect x="39" y="38" width="12" height="14" rx="6" fill="#fbbf24"/></g>
+        <!-- walk-body: head + cap bob together -->
+        <g class="walk-body">
+          <circle cx="28" cy="19" r="15" fill="#fbbf24"/>
+          <!-- cap crown (gold/amber) -->
+          <path d="M13,19 A15,15 0 0,1 43,19 Z" fill="#d97706"/>
+          <!-- cap brim -->
+          <rect x="32" y="16" width="18" height="6" rx="3" fill="#b45309"/>
+          <!-- back ear (lower half) -->
+          <ellipse cx="13" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <!-- eyebrow just below cap line -->
+          <path d="M33,21 Q37,19 42,20" fill="none" stroke="#78350f" stroke-width="2" stroke-linecap="round"/>
+          <!-- big white eye (lower half) -->
+          <circle cx="37" cy="25" r="4.5" fill="white"/>
+          <circle cx="39" cy="25" r="2.8" fill="#1e293b"/>
+          <circle cx="39.5" cy="24" r="1.1" fill="white"/>
+          <!-- round nose -->
+          <ellipse cx="43" cy="28" rx="4" ry="3" fill="#f59e0b"/>
+          <!-- broad smile -->
+          <path d="M37,31 Q41,34 43,31" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- USA IDLE: Mario-style front-facing, gold cap + teal shirt -->
+    <div class="char-v" id="cv-usa-idle">
+      <svg viewBox="0 0 55 95" width="55" height="95">
+        <g class="idle-body">
+          <!-- body / teal polo -->
+          <rect x="15" y="36" width="25" height="19" rx="4" fill="#0d9488"/>
+          <path d="M20,36 Q27,42 34,36" fill="none" stroke="#0f766e" stroke-width="1.5"/>
+          <!-- arms -->
+          <rect x="4" y="37" width="11" height="20" rx="5" fill="#fbbf24"/>
+          <rect x="40" y="37" width="11" height="20" rx="5" fill="#fbbf24"/>
+          <!-- legs / chinos -->
+          <rect x="15" y="54" width="11" height="21" rx="4" fill="#475569"/>
+          <rect x="29" y="54" width="11" height="21" rx="4" fill="#475569"/>
+          <!-- shoes -->
+          <rect x="12" y="72" width="16" height="9" rx="5" fill="#94a3b8"/>
+          <rect x="27" y="72" width="16" height="9" rx="5" fill="#94a3b8"/>
+          <!-- head -->
+          <circle cx="27" cy="19" r="15" fill="#fbbf24"/>
+          <!-- cap crown (gold) -->
+          <path d="M12,19 A15,15 0 0,1 42,19 Z" fill="#d97706"/>
+          <!-- cap brim (wide) -->
+          <rect x="9" y="16" width="36" height="6" rx="3" fill="#b45309"/>
+          <!-- ears (lower half) -->
+          <ellipse cx="12" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <ellipse cx="42" cy="26" rx="3" ry="4.5" fill="#f59e0b"/>
+          <!-- eyebrows just below cap line -->
+          <path d="M16,21 Q21,19 25,20" fill="none" stroke="#78350f" stroke-width="2" stroke-linecap="round"/>
+          <path d="M29,20 Q33,19 38,21" fill="none" stroke="#78350f" stroke-width="2" stroke-linecap="round"/>
+          <!-- big white eyes (lower half) -->
+          <circle cx="21" cy="25" r="4.5" fill="white"/>
+          <circle cx="33" cy="25" r="4.5" fill="white"/>
+          <circle cx="21" cy="26" r="2.8" fill="#1e293b"/>
+          <circle cx="33" cy="26" r="2.8" fill="#1e293b"/>
+          <circle cx="22" cy="24.5" r="1.1" fill="white"/>
+          <circle cx="34" cy="24.5" r="1.1" fill="white"/>
+          <!-- round nose -->
+          <ellipse cx="27" cy="29" rx="3.5" ry="2.5" fill="#f59e0b"/>
+          <!-- broad proud smile -->
+          <path d="M20,32 Q27,36 34,32" stroke="#92400e" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+  </div><!-- /#character -->
+
+  <!-- Intro prompt -->
+  <div id="intro-prompt">
+    <div style="background:rgba(255,255,255,.95);border-radius:16px;padding:.9rem 1.4rem;
+      box-shadow:0 4px 24px rgba(0,0,0,.1);font-size:.95rem;font-weight:600;
+      color:#475569;white-space:nowrap">
+      Keep scrolling <span style="color:#0ea5e9">→</span>
+    </div>
   </div>
 
-  <!-- 2024 -->
-  <div class="yr-mark" data-yr="2024"><div class="yr-inner"><div class="yr-txt">2024</div></div></div>
-
-  <div class="ms right research from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Research</div>
-      <div class="c-date">June 2024 — August 2024</div>
-      <div class="c-title">Graduate Research Assistant — Data Scientist</div>
-      <div class="c-org">UCLA Anderson School of Management · Los Angeles, CA</div>
-      <div class="c-desc">Applied advanced longitudinal modelling to one of life's biggest questions — what drives happiness after retirement? Used Latent Class Growth Analysis and Growth Mixture Modelling on the Health and Retirement Study dataset to uncover distinct trajectories in life satisfaction.</div>
-      <div class="tags">
-        <span class="tag">R</span>
-        <span class="tag">LCGA</span>
-        <span class="tag">Growth Mixture Modelling</span>
-        <span class="tag">HRS Data</span>
-        <span class="tag">Longitudinal Analysis</span>
-      </div>
+  <!-- Info card -->
+  <div id="info-card" style="display:none">
+    <div id="info-card-inner">
+      <span class="card-cat-badge" id="card-badge"></span>
+      <div class="card-date" id="card-date"></div>
+      <div class="card-title" id="card-title"></div>
+      <div class="card-org" id="card-org"></div>
+      <div class="card-desc" id="card-desc"></div>
+      <div class="card-tags" id="card-tags"></div>
+      <span class="card-arrow">▼</span>
     </div>
   </div>
 
-  <div class="ms left work from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Internship</div>
-      <div class="c-date">July 2024 — September 2024</div>
-      <div class="c-title">Strategy Intern</div>
-      <div class="c-org">ModernLTV · Remote</div>
-      <div class="c-desc">Built the go-to-market foundation for a fintech startup by identifying high-quality leads and architecting the roadmap for AI-enabled Business Insights KPIs — giving customers a clear lens to understand and grow their own businesses.</div>
-      <div class="tags">
-        <span class="tag">GTM Strategy</span>
-        <span class="tag">Lead Generation</span>
-        <span class="tag">AI KPIs</span>
-        <span class="tag">Fintech</span>
-      </div>
-    </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
+  <!-- HUD -->
+  <div id="progress-hud">
+    <div class="hud-count" id="hud-count">0 / 12</div>
+    <div class="hud-dots" id="hud-dots"></div>
   </div>
 
-  <div class="ms right startup from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Founder's Office</div>
-      <div class="c-date">July 2024 — December 2024</div>
-      <div class="c-title">Founder's Office Intern</div>
-      <div class="c-org">EFAS Technologies, Inc. · Newport Beach, CA</div>
-      <div class="c-desc">Embedded in the founding team of a pipeline defect detection tech company. Conducted market analysis, built pitch decks, projected financials, scraped investor data with Python, and drove personalised investor outreach campaigns end-to-end.</div>
-      <div class="tags">
-        <span class="tag">Investor Relations</span>
-        <span class="tag">Market Research</span>
-        <span class="tag">Python Scraping</span>
-        <span class="tag">Pitch Decks</span>
-        <span class="tag">Financial Projections</span>
-      </div>
-    </div>
-  </div>
+ </div>
+</div>
 
-  <div class="ms left achieve from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Achievements</div>
-      <div class="c-date">2024</div>
-      <div class="c-title">National Competition Semi-Finalist × 2</div>
-      <div class="c-org">Adobe Analytics Challenge · Humana Mays Case Competition</div>
-      <div class="c-desc">Competed at the highest levels of business analytics and strategy. Placed in the top 1% of the Adobe Analytics Challenge and ranked in the top 6% at the Humana Mays Case Competition — standing out among thousands of graduate students nationwide.</div>
-      <div class="c-nums">
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="20" data-prefix="Top ">0</div>
-          <div class="c-num-lbl">Adobe / 2,000 Teams</div>
-        </div>
-        <div class="c-num-item">
-          <div class="c-num-val" data-count="15" data-prefix="Rank ">0</div>
-          <div class="c-num-lbl">Humana / 280 Teams</div>
-        </div>
-      </div>
-      <div class="tags">
-        <span class="tag">Adobe Analytics</span>
-        <span class="tag">Case Competition</span>
-        <span class="tag">Healthcare Strategy</span>
-      </div>
-    </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
-  </div>
-
-  <div class="ms right edu from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Graduation</div>
-      <div class="c-date">December 2024</div>
-      <div class="c-title">Master of Science — Business Analytics</div>
-      <div class="c-org">UCLA Anderson School of Management · Los Angeles, CA</div>
-      <div class="c-desc">Crossed the finish line of an intensive programme that sharpened analytical thinking, refined strategic communication, and built a network across industries. What started as a gamble on a fresh start in a new country became one of the most defining achievements of the journey.</div>
-      <div class="tags">
-        <span class="tag">MSBA</span>
-        <span class="tag">UCLA Anderson</span>
-        <span class="tag">Business Analytics</span>
-        <span class="tag">Graduated Dec 2024</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Chapter IV -->
-  <div class="era-banner" data-era>
-    <div class="era-line"></div>
-    <div class="era-inner">
-      <span class="era-chapter">Chapter IV</span>
-      <span class="era-sep">·</span>
-      <span class="era-title">Present Chapter</span>
-    </div>
-    <div class="era-line flip"></div>
-  </div>
-
-  <!-- 2025 -->
-  <div class="yr-mark" data-yr="2025"><div class="yr-inner"><div class="yr-txt">2025</div></div></div>
-
-  <div class="ms left work from-left" data-ms>
-    <div class="ms-card">
-      <div class="shimmer"></div>
-      <div class="c-badge"><div class="c-badge-dot"></div>Full-Time</div>
-      <div class="c-date">April 2025 — February 2026</div>
-      <div class="c-title">Senior Business Analyst</div>
-      <div class="c-org">Copart · Dallas, Texas</div>
-      <div class="c-desc">Joined Copart's Marketing & Strategy Analytics team, bringing the full weight of analytical experience from AmEx and UCLA to one of the world's largest online vehicle auction platforms. Rapidly established impact across strategic initiatives and marketing analytics.</div>
-      <div class="tags">
-        <span class="tag">Marketing Analytics</span>
-        <span class="tag">Business Strategy</span>
-        <span class="tag">Copart</span>
-        <span class="tag">Dallas, TX</span>
-      </div>
-    </div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-empty"></div>
-  </div>
-
-  <!-- 2026 -->
-  <div class="yr-mark" data-yr="2026"><div class="yr-inner"><div class="yr-txt">2026</div></div></div>
-
-  <div class="ms right work from-right" data-ms>
-    <div class="ms-empty"></div>
-    <div class="ms-dot"><div class="dot-ring"></div></div>
-    <div class="ms-card current-glow">
-      <div class="shimmer"></div>
-      <div class="current-pill"><div class="cur-dot"></div>Present</div>
-      <div class="c-date">February 2026 — Now</div>
-      <div class="c-title">Manager, Strategic Analytics</div>
-      <div class="c-org">Copart · Dallas, Texas</div>
-      <div class="c-desc">Promoted to Manager within ten months of joining. Now leading strategic analytics for Copart's marketing organisation — translating data into decisions that move one of the world's leading vehicle commerce platforms forward. The journey continues.</div>
-      <div class="tags">
-        <span class="tag">Strategic Analytics</span>
-        <span class="tag">Team Leadership</span>
-        <span class="tag">Marketing Strategy</span>
-        <span class="tag">Executive Insights</span>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<!-- ══════ SKILLS ══════ -->
-<section id="skills">
-  <div class="skills-header" data-skills-header>
-    <div class="skills-eyebrow">Across a decade of work</div>
-    <div class="skills-title">Skills & Toolkit</div>
-  </div>
-  <div class="skills-grid">
-
-    <div class="skill-cat analytics" data-skill-cat>
-      <div class="sk-cat-head">
-        <div class="sk-cat-dot"></div>
-        <div class="sk-cat-name">Analytics & Data</div>
-      </div>
-      <div class="sk-chips">
-        <span class="sk-chip">Python</span>
-        <span class="sk-chip">SQL / Hive</span>
-        <span class="sk-chip">R</span>
-        <span class="sk-chip">Tableau</span>
-        <span class="sk-chip">Statistical Modelling</span>
-        <span class="sk-chip">Time Series</span>
-        <span class="sk-chip">Longitudinal Analysis</span>
-        <span class="sk-chip">LCGA / GMM</span>
-      </div>
-    </div>
-
-    <div class="skill-cat engineering" data-skill-cat>
-      <div class="sk-cat-head">
-        <div class="sk-cat-dot"></div>
-        <div class="sk-cat-name">Engineering & Dev</div>
-      </div>
-      <div class="sk-chips">
-        <span class="sk-chip">HTML / CSS / JS</span>
-        <span class="sk-chip">Machine Learning</span>
-        <span class="sk-chip">KNN & Decision Trees</span>
-        <span class="sk-chip">API Integration</span>
-        <span class="sk-chip">Python Scraping</span>
-        <span class="sk-chip">Data Pipelines</span>
-        <span class="sk-chip">Java</span>
-      </div>
-    </div>
-
-    <div class="skill-cat strategy" data-skill-cat>
-      <div class="sk-cat-head">
-        <div class="sk-cat-dot"></div>
-        <div class="sk-cat-name">Strategy & Business</div>
-      </div>
-      <div class="sk-chips">
-        <span class="sk-chip">GTM Strategy</span>
-        <span class="sk-chip">Market Research</span>
-        <span class="sk-chip">Campaign Analytics</span>
-        <span class="sk-chip">Share of Wallet</span>
-        <span class="sk-chip">Investor Relations</span>
-        <span class="sk-chip">Stakeholder Mgmt</span>
-        <span class="sk-chip">NPS Analysis</span>
-      </div>
-    </div>
-
-    <div class="skill-cat tools" data-skill-cat>
-      <div class="sk-cat-head">
-        <div class="sk-cat-dot"></div>
-        <div class="sk-cat-name">Tools & Platforms</div>
-      </div>
-      <div class="sk-chips">
-        <span class="sk-chip">Tableau</span>
-        <span class="sk-chip">Excel / PowerPoint</span>
-        <span class="sk-chip">Git</span>
-        <span class="sk-chip">Adobe Analytics</span>
-        <span class="sk-chip">Google Maps API</span>
-        <span class="sk-chip">Smith Travel Research</span>
-        <span class="sk-chip">HRS Dataset</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ══════ FOOTER ══════ -->
+<!-- FOOTER -->
 <footer id="footer">
-  <div class="ft-title">What's next?</div>
-  <p class="ft-sub">Always open to interesting conversations about data, strategy, and ambitious ideas.</p>
-  <div class="ft-links">
-    <a href="mailto:dhruv.jain.msba@gmail.com" class="ft-link">✉ dhruv.jain.msba@gmail.com</a>
-    <a href="https://www.linkedin.com/in/dhruv-dj" target="_blank" class="ft-link">LinkedIn → dhruv-dj</a>
+  <h2>Let's Connect</h2>
+  <p>Always open to interesting conversations and ambitious ideas.</p>
+  <div class="footer-links">
+    <a href="mailto:dhruv.jain.msba@gmail.com" class="footer-link fl-email">✉ dhruv.jain.msba@gmail.com</a>
+    <a href="https://www.linkedin.com/in/dhruv-dj" target="_blank" class="footer-link fl-li">in LinkedIn</a>
   </div>
-  <p class="ft-copy">Dhruv Jain · Dallas–Fort Worth · 2026</p>
 </footer>
 
 <script>
-/* ══════════════════════════════════════════════
-   CUSTOM CURSOR
-══════════════════════════════════════════════ */
-const cursor = document.getElementById('cursor');
-const trail = document.getElementById('cursor-trail');
-let mx=0,my=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX; my=e.clientY;
-  cursor.style.left=mx+'px';
-  cursor.style.top=my+'px';
-  trail.style.left=mx+'px';
-  trail.style.top=my+'px';
-});
-document.querySelectorAll('a,button,.ms-card,.ft-link,.scroll-cta,[onclick]').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{
-    cursor.style.width='28px';
-    cursor.style.height='28px';
-    cursor.style.background='rgba(168,85,247,.9)';
-  });
-  el.addEventListener('mouseleave',()=>{
-    cursor.style.width='12px';
-    cursor.style.height='12px';
-    cursor.style.background='#fff';
-  });
-});
-
-/* ══════════════════════════════════════════════
-   PARTICLES
-══════════════════════════════════════════════ */
 (function(){
-  const canvas=document.getElementById('canvas');
-  const ctx=canvas.getContext('2d');
-  let W,H,pts=[];
-  const N=90,MD=125;
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
-  class P{
-    constructor(){this.reset()}
-    reset(){
-      this.x=Math.random()*W;this.y=Math.random()*H;
-      this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;
-      this.r=Math.random()*1.4+.4;this.a=Math.random()*.45+.08;
-    }
-    step(){
-      this.x+=this.vx;this.y+=this.vy;
-      if(this.x<0||this.x>W)this.vx*=-1;
-      if(this.y<0||this.y>H)this.vy*=-1;
-    }
-    draw(){
-      ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(168,85,247,${this.a})`;ctx.fill();
-    }
-  }
-  function init(){resize();pts=Array.from({length:N},()=>new P())}
-  function link(){
-    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
-      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
-      if(d<MD){
-        ctx.strokeStyle=`rgba(99,102,241,${(1-d/MD)*.18})`;
-        ctx.lineWidth=.5;ctx.beginPath();
-        ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
-      }
-    }
-  }
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    pts.forEach(p=>{p.step();p.draw()});link();
-    requestAnimationFrame(frame);
-  }
-  window.addEventListener('resize',()=>{resize();pts.forEach(p=>p.reset())});
-  init();frame();
-})();
+'use strict';
 
-/* ══════════════════════════════════════════════
-   SCROLL: PROGRESS + TIMELINE FILL + YEAR TRACKER + BACK TOP
-══════════════════════════════════════════════ */
-const prog=document.getElementById('prog');
-const tlFill=document.getElementById('tl-fill');
-const tlTrav=document.getElementById('tl-traveler');
-const tlSec=document.getElementById('timeline');
-const yrTracker=document.getElementById('year-tracker');
-const yrText=document.getElementById('yt-year-text');
-const backTop=document.getElementById('back-top');
+const CAT_COLORS = {edu:'#8b5cf6',work:'#0ea5e9',startup:'#f59e0b',research:'#10b981',achieve:'#f43f5e'};
+const CAT_LABELS = {edu:'Education',work:'Work',startup:'Entrepreneurship',research:'Research',achieve:'Achievement'};
 
-// Map year markers for tracker
-const yearNodes=[];
-document.querySelectorAll('[data-yr]').forEach(el=>{
-  yearNodes.push({el,yr:el.dataset.yr});
+const milestones = [
+  {year:'2016',cat:'edu',   label:'DTU',      labelSub:'B.Tech',       title:'BTech — Electrical & Electronics Engineering',    org:'Delhi Technological University',                  date:'Jul 2016 – May 2020', desc:'Chose Electrical Engineering but followed Computer Science at every turn — DSA, Machine Learning, and a TA role built across four summers.',tags:['Java','DSA','Machine Learning']},
+  {year:'2017',cat:'startup',label:'Freelance',labelSub:'Design+Dev',  title:'Freelance Designer & Developer',                   org:'Independent · Remote',                            date:'Jul 2017 – Jul 2020', desc:'Real clients, real products. Three years of graphic design and web dev ran in parallel with all four years of undergrad.',tags:['HTML/CSS/JS','Graphic Design','Client Work']},
+  {year:'2019',cat:'work',  label:'Cognitior',labelSub:'ML Intern',    title:'Machine Learning Intern',                          org:'Cognitior · Gurgaon, India',                      date:'Jun – Jul 2019',      desc:'First professional ML role — time series analysis on climate data, KNN & decision tree imputation.',tags:['Python','KNN','Time Series']},
+  {year:'2019',cat:'edu',   label:'Coding',   labelSub:'Ninjas TA',    title:'Teaching Assistant — DSA',                         org:'Coding Ninjas India · Delhi',                     date:'Jun – Oct 2019',      desc:'Turned mastery into mentorship. Resolved 550+ student queries on Data Structures & Algorithms in Java.',tags:['Java','Algorithms','550+ queries']},
+  {year:'2019',cat:'startup',label:'Ziel',    labelSub:'Co-Founder',   title:'Co-Founder',                                       org:'Ziel — Campus Recruitment · Delhi',               date:'Oct 2019 – Jun 2020', desc:"Co-built a platform bridging students from top colleges with companies — tackling India's campus placement gap.",tags:['Startup','Product Strategy','Recruitment Tech']},
+  {year:'2020',cat:'work',  label:'AmEx',     labelSub:'Analyst',      title:'Data Analyst — Merchant Analytics',                org:'American Express · EMEA Markets',                 date:'Aug 2020 – Jul 2022', desc:'65+ BI projects, $360K+ in dashboard revenue, 25% coverage expansion across luxury retail, lodging, airlines and e-commerce.',tags:['Tableau','Hive SQL','Python','$360K+']},
+  {year:'2022',cat:'work',  label:'AmEx',     labelSub:'Promoted',     title:'Asst. Manager — Merchant Analytics',               org:'American Express · India',                        date:'Aug 2022 – Aug 2023', desc:'Promoted within 2 years. Scaled quarterly insights from a 40-day turnaround to 2 minutes across 4 global regions.',tags:['Share of Wallet','Global Markets','40d→2min']},
+  {year:'2023',cat:'edu',   label:'UCLA',     labelSub:'MSBA',         title:'MS in Business Analytics',                         org:'UCLA Anderson School of Management · Los Angeles',date:'Sep 2023 – Dec 2024', desc:"Left corporate India and crossed an ocean. Joined one of the world's premier business analytics programmes in Los Angeles.",tags:['R','Statistical Modelling','Machine Learning','LA']},
+  {year:'2024',cat:'research',label:'Research',labelSub:'+Internships',title:"RA + Strategy Intern + Founder's Office",          org:'UCLA Anderson · ModernLTV · EFAS Technologies',   date:'Jun – Dec 2024',      desc:'Three concurrent roles: longitudinal research on retirement happiness (LCGA/GMM), fintech GTM strategy, and deeptech investor outreach.',tags:['LCGA','GMM','GTM Strategy','Investor Outreach']},
+  {year:'2024',cat:'achieve',label:'Awards',  labelSub:'Semi-Finalist',title:'National Semi-Finalist × 2',                       org:'Adobe Analytics Challenge · Humana Mays',         date:'2024',                desc:'Top 20 of 2,000 at Adobe Analytics Challenge. Rank 15 of 280 at Humana Mays Case Competition.',tags:['Top 1%','Adobe','Humana','Case Competition']},
+  {year:'2024',cat:'edu',   label:'UCLA',     labelSub:'Graduated!',   title:'Graduated — MSBA',                                 org:'UCLA Anderson School of Management',              date:'December 2024',       desc:'The degree complete. A leap of faith from Delhi to Los Angeles — fully paid off.',tags:['MSBA','UCLA Anderson','Class of 2024']},
+  {year:'2026',cat:'work',  label:'Copart',   labelSub:'Manager',      title:'Manager, Strategic Analytics',                     org:'Copart · Dallas, Texas',                          date:'Apr 2025 → Now',      desc:"Joined as Senior BA, promoted to Manager in 10 months. Leading strategic analytics for Copart's marketing organisation.",tags:['Marketing Strategy','Team Lead','Dallas TX'],current:true},
+];
+
+/* ── DOM refs ── */
+const gameWrapper   = document.getElementById('game-wrapper');
+const world         = document.getElementById('world');
+const parallaxBg    = document.getElementById('parallax-bg');
+const character     = document.getElementById('character');
+const infoCard      = document.getElementById('info-card');
+const infoCardInner = document.getElementById('info-card-inner');
+const introPrompt   = document.getElementById('intro-prompt');
+const hudCount      = document.getElementById('hud-count');
+const hudDots       = document.getElementById('hud-dots');
+const locLabel      = document.getElementById('loc-label');
+
+/* ── Mobile fallback ── */
+if(window.innerWidth < 768){
+  const mob = document.getElementById('mobile-fallback');
+  milestones.forEach(m=>{
+    const c=document.createElement('div');
+    c.className='mob-card';
+    c.style.setProperty('--c',CAT_COLORS[m.cat]);
+    c.innerHTML=`<span class="mob-badge">${CAT_LABELS[m.cat]}</span>
+      <h3>${m.title}</h3>
+      <p style="font-weight:600;color:#0f172a;margin-bottom:.3rem">${m.org}</p>
+      <p>${m.date}</p><p style="margin-top:.4rem">${m.desc}</p>`;
+    mob.appendChild(c);
+  });
+  return;
+}
+
+/* ── HUD dots ── */
+milestones.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='hud-dot';d.id=`dot-${i}`;
+  hudDots.appendChild(d);
 });
 
+/* ── Era helpers ── */
+function getBgEra(idx){
+  if(idx<0||idx<7) return 'delhi';
+  if(idx<11) return 'la';
+  return 'dallas';
+}
+function getCharEra(idx){
+  if(idx<0||idx<5) return 'young';
+  if(idx<7) return 'amex';
+  return 'usa';
+}
+
+/* ── State ── */
+let scrollableRange=0,maxOffset=0,currentOffset=0,targetOffset=0;
+let currentMilestoneIdx=-1,currentBgEra='delhi',currentCharEra='young';
+let cardTransitioning=false,locLabelTimer=null;
+
+/* ── Layout & world build ── */
+function computeLayout(){
+  scrollableRange = gameWrapper.offsetHeight - window.innerHeight;
+  maxOffset = scrollableRange;
+  const charX = window.innerWidth * 0.25;
+  milestones.forEach((m,i)=>{
+    m.reachOffset = ((i+0.5)/milestones.length)*maxOffset;
+    m.worldX = charX + m.reachOffset;
+  });
+  buildWorld();
+  // position character and cards
+  character.style.left = charX+'px';
+  character.style.transform = 'translateX(-50%)';
+  infoCard.style.left = charX+'px';
+  infoCard.style.bottom = (80+95+28)+'px';
+  introPrompt.style.left = (charX+40)+'px';
+  introPrompt.style.bottom = (80+95+32)+'px';
+}
+
+function buildWorld(){
+  world.querySelectorAll('.post-group,.tree,.bush,.palm,.d-building').forEach(el=>el.remove());
+  const charX = window.innerWidth*0.25;
+  const totalW = charX + maxOffset + window.innerWidth*0.6;
+  world.style.width = totalW+'px';
+  world.style.height = '100%';
+
+  // Trees/palms/decor scattered between milestones (era-appropriate)
+  const decorPositions = [
+    {x:charX*0.35,type:'tree'},
+    {x:charX+maxOffset*0.08,type:'tree'},
+    {x:charX+maxOffset*0.18,type:'d-building'},
+    {x:charX+maxOffset*0.28,type:'tree'},
+    {x:charX+maxOffset*0.38,type:'d-building'},
+    {x:charX+maxOffset*0.48,type:'palm'},
+    {x:charX+maxOffset*0.55,type:'palm'},
+    {x:charX+maxOffset*0.63,type:'tree'},
+    {x:charX+maxOffset*0.70,type:'palm'},
+    {x:charX+maxOffset*0.78,type:'tree'},
+    {x:charX+maxOffset*0.86,type:'tree'},
+    {x:charX+maxOffset*0.93,type:'tree'},
+  ];
+  decorPositions.forEach(({x,type})=>{
+    const el=document.createElement('div');
+    if(type==='tree'){
+      el.className='tree';
+      el.style.left=x+'px';
+      el.innerHTML='<div class="tree-top"></div><div class="tree-trunk"></div>';
+    } else if(type==='palm'){
+      el.className='tree';el.style.left=x+'px';
+      el.innerHTML='<div class="palm-top"></div><div class="tree-trunk"></div>';
+    } else {
+      el.className='d-building';
+      el.style.left=x+'px';
+      el.style.width=(14+Math.random()*16)+'px';
+      el.style.height=(30+Math.random()*40)+'px';
+    }
+    world.appendChild(el);
+  });
+
+  // Bushes
+  [charX*0.7,charX+maxOffset*0.14,charX+maxOffset*0.44,charX+maxOffset*0.58,
+   charX+maxOffset*0.74,charX+maxOffset*0.88].forEach(bx=>{
+    const b=document.createElement('div');
+    b.className='bush';b.style.left=bx+'px';
+    world.appendChild(b);
+  });
+
+  // Milestone posts
+  milestones.forEach((m,i)=>{
+    const g=document.createElement('div');
+    g.className='post-group';g.id=`post-${i}`;
+    g.style.cssText=`position:absolute;bottom:0;display:flex;flex-direction:column;
+      align-items:center;left:${m.worldX}px;transform:translateX(-50%);width:80px;z-index:6`;
+    g.innerHTML=`
+      <div id="orb-${i}" style="width:16px;height:16px;border-radius:50%;background:#cbd5e1;
+        transition:background .5s,box-shadow .5s,transform .4s;flex-shrink:0;z-index:2;
+        margin-bottom:-1px"></div>
+      <div id="pole-${i}" style="width:3px;height:78px;background:#cbd5e1;
+        border-radius:2px;transition:background .5s,box-shadow .3s"></div>
+      <div style="margin-top:8px;text-align:center;pointer-events:none">
+        <div style="font-size:.62rem;color:#94a3b8;font-weight:600;
+          letter-spacing:.08em;line-height:1.2;transition:color .4s" id="plyr-${i}">${m.year}</div>
+        <div style="font-size:.72rem;color:#64748b;font-weight:700;
+          white-space:nowrap;transition:color .4s" id="plbl-${i}">${m.label}<br>
+          <span style="font-size:.62rem;font-weight:500">${m.labelSub}</span></div>
+      </div>`;
+    world.appendChild(g);
+  });
+}
+
+/* ── Milestone visual states ── */
+function updateMilestoneStates(idx){
+  milestones.forEach((m,i)=>{
+    const orb=document.getElementById(`orb-${i}`);
+    const pole=document.getElementById(`pole-${i}`);
+    const lyr=document.getElementById(`plyr-${i}`);
+    const lbl=document.getElementById(`plbl-${i}`);
+    const dot=document.getElementById(`dot-${i}`);
+    const col=CAT_COLORS[m.cat];
+    if(i<idx){
+      orb.style.background=col; orb.style.boxShadow=`0 0 8px ${col}88`;
+      orb.style.transform='scale(1)'; orb.classList&&orb.classList.remove('orb-pulse');
+      pole.style.background=col; pole.style.boxShadow='none';
+      lyr.style.color=col; lbl.style.color=col;
+      if(dot) dot.style.background=col;
+    } else if(i===idx){
+      orb.style.background=col;
+      orb.style.boxShadow=`0 0 0 5px ${col}33, 0 0 20px ${col}`;
+      orb.style.transform='scale(1.55)';
+      pole.style.background=col; pole.style.boxShadow=`0 0 10px ${col}88`;
+      lyr.style.color=col; lbl.style.color=col;
+      if(dot) dot.style.background=col;
+    } else {
+      orb.style.background='#cbd5e1'; orb.style.boxShadow='none';
+      orb.style.transform='scale(1)';
+      pole.style.background='#cbd5e1'; pole.style.boxShadow='none';
+      lyr.style.color='#94a3b8'; lbl.style.color='#94a3b8';
+      if(dot) dot.style.background='#e2e8f0';
+    }
+  });
+  hudCount.textContent=`${Math.max(0,idx<0?0:idx+1)} / 12`;
+}
+
+/* ── Era transitions ── */
+function updateBgEra(newEra){
+  if(newEra===currentBgEra) return;
+  const prev=currentBgEra;
+  // Flash the screen on location change
+  triggerEraFlash();
+  // Plane flies across when leaving India for LA
+  if(prev==='delhi'&&newEra==='la') triggerPlane();
+  // Fade sky
+  document.getElementById(`sky-${prev}`).style.opacity='0';
+  document.getElementById(`sky-${newEra}`).style.opacity='1';
+  // Fade silhouette
+  document.getElementById(`sil-${prev}`).style.opacity='0';
+  document.getElementById(`sil-${newEra}`).style.opacity='1';
+  // Fade ground
+  document.getElementById(`gnd-${prev}`).style.opacity='0';
+  document.getElementById(`gnd-${newEra}`).style.opacity='1';
+  // Transition hills
+  const hillColors={
+    delhi:['#fbbf24','#f97316','#ea580c'],
+    la:['#4ade80','#22c55e','#16a34a'],
+    dallas:['#84cc16','#65a30d','#4d7c0f']
+  };
+  document.querySelectorAll('.hill').forEach((h,i)=>{
+    h.style.background=hillColors[newEra][i]||'#4ade80';
+  });
+  // Location label with pop animation
+  const labels={
+    delhi:'🇮🇳  Delhi, India',
+    la:'✈️  Los Angeles, California',
+    dallas:'🤠  Dallas, Texas'
+  };
+  showLocLabel(labels[newEra]);
+  currentBgEra=newEra;
+}
+
+function triggerPlane(){
+  const p=document.getElementById('plane');
+  const c=document.getElementById('contrail');
+  // Reset both
+  [p,c].forEach(el=>{
+    el.classList.remove('in-flight');
+    void el.offsetWidth; // force reflow
+    el.classList.add('in-flight');
+  });
+  p.addEventListener('animationend',()=>{
+    p.classList.remove('in-flight');
+  },{once:true});
+  c.addEventListener('animationend',()=>{
+    c.classList.remove('in-flight');
+  },{once:true});
+}
+
+function triggerEraFlash(){
+  const f=document.getElementById('era-flash');
+  f.classList.remove('popping');
+  void f.offsetWidth;
+  f.classList.add('popping');
+  f.addEventListener('animationend',()=>f.classList.remove('popping'),{once:true});
+}
+
+function updateCharEra(newEra){
+  if(newEra===currentCharEra) return;
+  character.classList.remove(`era-${currentCharEra}`);
+  character.classList.add(`era-${newEra}`);
+  currentCharEra=newEra;
+}
+
+function showLocLabel(text){
+  if(locLabelTimer) clearTimeout(locLabelTimer);
+  locLabel.textContent=text;
+  locLabel.classList.remove('big-flash');
+  void locLabel.offsetWidth;
+  locLabel.classList.add('show','big-flash');
+  locLabelTimer=setTimeout(()=>{
+    locLabel.classList.remove('show','big-flash');
+  },3200);
+}
+
+/* ── Info card ── */
+function showCard(m){
+  const col=CAT_COLORS[m.cat];
+  const badge=document.getElementById('card-badge');
+  badge.textContent=CAT_LABELS[m.cat];
+  badge.style.background=col;
+  document.getElementById('card-date').textContent=m.date;
+  const titleEl=document.getElementById('card-title');
+  titleEl.innerHTML=m.title+(m.current?'<span class="now-badge"><span class="now-dot"></span>NOW</span>':'');
+  const orgEl=document.getElementById('card-org');
+  orgEl.textContent=m.org; orgEl.style.color=col;
+  document.getElementById('card-desc').textContent=m.desc;
+  document.getElementById('card-tags').innerHTML=m.tags.map(t=>`<span class="card-tag">${t}</span>`).join('');
+}
+
+function transitionCard(newIdx){
+  if(newIdx<0){infoCard.style.display='none';introPrompt.style.display='block';return;}
+  introPrompt.style.display='none';infoCard.style.display='block';
+  if(cardTransitioning) return;
+  cardTransitioning=true;
+  infoCardInner.classList.add('card-exit');
+  infoCardInner.classList.remove('card-enter');
+  setTimeout(()=>{
+    showCard(milestones[newIdx]);
+    infoCardInner.classList.remove('card-exit');
+    void infoCardInner.offsetWidth;
+    infoCardInner.classList.add('card-enter');
+    cardTransitioning=false;
+    // Jump
+    character.classList.add('char-jump');
+    character.addEventListener('animationend',()=>character.classList.remove('char-jump'),{once:true});
+  },220);
+}
+
+/* ── Scroll handler ── */
 function onScroll(){
-  const s=window.scrollY;
-  const total=document.documentElement.scrollHeight-window.innerHeight;
-  prog.style.width=(Math.min(s/total,1)*100)+'%';
+  const rect=gameWrapper.getBoundingClientRect();
+  const scrolled=Math.max(0,-rect.top);
+  targetOffset=Math.min(1,scrolled/scrollableRange)*maxOffset;
+}
 
-  // Back to top
-  s>300?backTop.classList.add('show'):backTop.classList.remove('show');
+/* ── RAF loop ── */
+function loop(){
+  currentOffset+=(targetOffset-currentOffset)*0.18;
+  world.style.transform=`translateX(-${currentOffset}px)`;
+  parallaxBg.style.transform=`translateX(-${currentOffset*0.25}px)`;
 
-  // Timeline fill
-  const tlTop=tlSec.offsetTop;
-  const tlH=tlSec.offsetHeight;
-  const inTL=s-tlTop+window.innerHeight*.65;
-  const pct=Math.max(0,Math.min(inTL/tlH,1));
-  const h=pct*tlH;
-  tlFill.style.height=h+'px';
-  tlTrav.style.top=h+'px';
-
-  // Year tracker
-  if(s>window.innerHeight*.5){
-    yrTracker.classList.add('show');
-    let curYr='2016';
-    yearNodes.forEach(({el,yr})=>{
-      if(el.getBoundingClientRect().top<window.innerHeight*.6) curYr=yr;
-    });
-    yrText.textContent=curYr;
+  // Walk/idle state
+  const moving=Math.abs(targetOffset-currentOffset)>1;
+  if(moving){
+    if(!character.classList.contains('char-walk')){
+      character.classList.remove('char-idle');character.classList.add('char-walk');
+    }
   } else {
-    yrTracker.classList.remove('show');
+    if(!character.classList.contains('char-idle')){
+      character.classList.remove('char-walk');character.classList.add('char-idle');
+    }
   }
+
+  // Current milestone
+  let newIdx=-1;
+  for(let i=0;i<milestones.length;i++){
+    if(milestones[i].reachOffset<=currentOffset+55) newIdx=i;
+    else break;
+  }
+  if(newIdx!==currentMilestoneIdx){
+    currentMilestoneIdx=newIdx;
+    updateMilestoneStates(newIdx);
+    transitionCard(newIdx);
+    updateBgEra(getBgEra(newIdx));
+    updateCharEra(getCharEra(newIdx));
+  }
+
+  requestAnimationFrame(loop);
 }
+
+/* ── Init ── */
+computeLayout();
+updateMilestoneStates(-1);
+// Show Delhi label on first load with a small delay
+setTimeout(()=>showLocLabel('🇮🇳  Delhi, India'),1200);
+
 window.addEventListener('scroll',onScroll,{passive:true});
-onScroll();
+window.addEventListener('resize',()=>{computeLayout();updateMilestoneStates(currentMilestoneIdx)});
+loop();
 
-/* ══════════════════════════════════════════════
-   INTERSECTION OBSERVERS
-══════════════════════════════════════════════ */
-// Milestones
-const ioMs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(!e.isIntersecting) return;
-    const ms=e.target;
-    const card=ms.querySelector('.ms-card');
-    const dot=ms.querySelector('.ms-dot');
-    const dotRing=ms.querySelector('.dot-ring');
-    setTimeout(()=>{
-      if(dotRing) dotRing.classList.add('vis');
-      if(dot) dot.classList.add('vis');
-    },60);
-    setTimeout(()=>{
-      if(card){
-        card.classList.add('vis');
-        triggerCounters(card);
-        staggerTags(card);
-      }
-    },150);
-    ioMs.unobserve(ms);
-  });
-},{threshold:.12,rootMargin:'0px 0px -50px 0px'});
-document.querySelectorAll('[data-ms]').forEach(el=>ioMs.observe(el));
-
-// Year markers
-const ioYr=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){e.target.classList.add('vis');ioYr.unobserve(e.target);}
-  });
-},{threshold:.4});
-document.querySelectorAll('[data-yr]').forEach(el=>ioYr.observe(el));
-
-// Era banners
-const ioEra=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){e.target.classList.add('vis');ioEra.unobserve(e.target);}
-  });
-},{threshold:.3});
-document.querySelectorAll('[data-era]').forEach(el=>ioEra.observe(el));
-
-// Skills header
-const ioSkH=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){e.target.classList.add('vis');ioSkH.unobserve(e.target);}
-  });
-},{threshold:.3});
-document.querySelectorAll('[data-skills-header]').forEach(el=>ioSkH.observe(el));
-
-// Skill category cards
-const ioSkCat=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(!e.isIntersecting) return;
-    const cat=e.target;
-    setTimeout(()=>{
-      cat.classList.add('vis');
-      cat.querySelectorAll('.sk-chip').forEach((chip,i)=>{
-        setTimeout(()=>chip.classList.add('c-vis'),i*55);
-      });
-    },parseInt(cat.dataset.delay||0));
-    ioSkCat.unobserve(cat);
-  });
-},{threshold:.15});
-document.querySelectorAll('[data-skill-cat]').forEach((el,i)=>{
-  el.dataset.delay=i*100;
-  ioSkCat.observe(el);
-});
-
-/* ══════════════════════════════════════════════
-   COUNTER ANIMATIONS
-══════════════════════════════════════════════ */
-function triggerCounters(card){
-  card.querySelectorAll('[data-count]').forEach(el=>{
-    const target=parseInt(el.dataset.count);
-    const prefix=el.dataset.prefix||'';
-    const suffix=el.dataset.suffix||'';
-    const dur=1300;
-    const start=performance.now();
-    (function tick(now){
-      const t=Math.min((now-start)/dur,1);
-      const ease=1-Math.pow(1-t,3);
-      el.textContent=prefix+Math.round(ease*target)+suffix;
-      if(t<1) requestAnimationFrame(tick);
-    })(start);
-  });
-}
-
-/* ══════════════════════════════════════════════
-   TAG STAGGER
-══════════════════════════════════════════════ */
-function staggerTags(card){
-  card.querySelectorAll('.tag').forEach((tag,i)=>{
-    setTimeout(()=>tag.classList.add('t-vis'),300+i*55);
-  });
-}
-
-/* ══════════════════════════════════════════════
-   HERO PARALLAX
-══════════════════════════════════════════════ */
-const heroName=document.querySelector('.hero-name');
-window.addEventListener('scroll',()=>{
-  if(window.scrollY<window.innerHeight){
-    heroName.style.transform=`translateY(${window.scrollY*.12}px)`;
-  }
-},{passive:true});
-
-/* ══════════════════════════════════════════════
-   NAV SMOOTH SCROLL
-══════════════════════════════════════════════ */
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    e.preventDefault();
-    const t=document.querySelector(a.getAttribute('href'));
-    if(t) t.scrollIntoView({behavior:'smooth'});
-  });
-});
+})();
 </script>
 </body>
 </html>
