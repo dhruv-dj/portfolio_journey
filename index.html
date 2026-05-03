@@ -343,6 +343,19 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
 #sound-btn:hover{transform:scale(1.1);box-shadow:0 4px 20px rgba(0,0,0,.18)}
 #sound-btn:active{transform:scale(.93)}
 
+/* ── SCROLL-TO-TOP BUTTON ── */
+#scroll-top-btn{
+  position:fixed;bottom:1.5rem;right:1rem;z-index:200;
+  background:rgba(255,255,255,.92);border:none;border-radius:12px;
+  padding:.45rem .65rem;font-size:1.25rem;cursor:pointer;
+  box-shadow:0 2px 16px rgba(0,0,0,.13);backdrop-filter:blur(8px);
+  transition:transform .15s,box-shadow .15s,opacity .3s,visibility .3s;
+  line-height:1;opacity:0;visibility:hidden;
+}
+#scroll-top-btn.visible{opacity:1;visibility:visible}
+#scroll-top-btn:hover{transform:scale(1.1);box-shadow:0 4px 20px rgba(0,0,0,.18)}
+#scroll-top-btn:active{transform:scale(.93)}
+
 /* ── FOOTER ── */
 #footer{
   background:linear-gradient(135deg,#f8fafc 0%,#f0fdf4 100%);
@@ -567,6 +580,7 @@ body{font-family:'Inter',sans-serif;color:#1e293b;overflow-x:hidden;background:#
 <body>
 
 <button id="sound-btn" title="Toggle sound">🔊</button>
+<button id="scroll-top-btn" title="Back to top" aria-label="Back to top">⬆️</button>
 
 <!-- ── HERO ── -->
 <section id="hero">
@@ -1187,6 +1201,15 @@ document.getElementById('sound-btn').addEventListener('click',()=>{
   soundOn=!soundOn;
   document.getElementById('sound-btn').textContent=soundOn?'🔊':'🔇';
   if(soundOn) getAc(); // resume context on unmute
+});
+
+// Scroll-to-top button
+const scrollTopBtn = document.getElementById('scroll-top-btn');
+window.addEventListener('scroll',()=>{
+  scrollTopBtn.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
+},{passive:true});
+scrollTopBtn.addEventListener('click',()=>{
+  window.scrollTo({top:0,behavior:'smooth'});
 });
 
 /* ── HUD dots ── */
